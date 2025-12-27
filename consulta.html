@@ -12,17 +12,378 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
     
     <style>
-        /* ... (Mantén todos los estilos CSS previos) ... */
-        /* (El CSS se mantiene igual que en el código anterior) */
+        /* ===== VARIABLES CSS ===== */
+        :root {
+            /* Colores principales */
+            --primary-color: #2e7d32;
+            --primary-light: #58bc82;
+            --primary-dark: #1b5e20;
+            --accent-color: #45a56b;
+            --success-color: #4caf50;
+            --warning-color: #ff9800;
+            --danger-color: #f44336;
+            --info-color: #2196f3;
+            
+            /* Colores neutrales */
+            --bg-light: #f8f9fa;
+            --bg-white: #ffffff;
+            --text-dark: #2d3748;
+            --text-light: #718096;
+            --border-color: #e2e8f0;
+            --shadow-color: rgba(0, 0, 0, 0.08);
+            
+            /* Espaciado */
+            --space-xs: 0.5rem;
+            --space-sm: 1rem;
+            --space-md: 1.5rem;
+            --space-lg: 2rem;
+            --space-xl: 3rem;
+            
+            /* Bordes */
+            --border-radius-sm: 8px;
+            --border-radius-md: 12px;
+            --border-radius-lg: 20px;
+            --border-radius-xl: 30px;
+            
+            /* Sombras */
+            --shadow-sm: 0 2px 8px var(--shadow-color);
+            --shadow-md: 0 10px 25px var(--shadow-color);
+            --shadow-lg: 0 15px 35px var(--shadow-color);
+            
+            /* Transiciones */
+            --transition-fast: 0.2s ease;
+            --transition-normal: 0.3s ease;
+            --transition-slow: 0.5s ease;
+            
+            /* Fuentes */
+            --font-primary: 'Poppins', sans-serif;
+            --font-secondary: 'Montserrat', sans-serif;
+        }
+
+        /* ===== RESET Y ESTILOS BASE ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-primary);
+            line-height: 1.6;
+            color: var(--text-dark);
+            background: linear-gradient(135deg, #f3f4f7 0%, #e8f5e9 100%);
+            min-height: 100vh;
+            padding: var(--space-md);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(88, 188, 130, 0.1) 0%, transparent 40%),
+                radial-gradient(circle at 80% 20%, rgba(46, 125, 50, 0.1) 0%, transparent 40%);
+            z-index: -1;
+        }
+
+        /* ===== CONTENEDOR PRINCIPAL ===== */
+        .container-main {
+            max-width: 650px;
+            width: 100%;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ===== FORMULARIO DE CONSULTA ===== */
+        .form-container {
+            background: var(--bg-white);
+            border-radius: var(--border-radius-lg);
+            padding: var(--space-xl);
+            box-shadow: var(--shadow-lg);
+            border: 1px solid rgba(88, 188, 130, 0.2);
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .form-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-color), var(--primary-light));
+        }
+
+        .company-header {
+            text-align: center;
+            margin-bottom: var(--space-lg);
+        }
+
+        .company-logo {
+            max-width: 250px;
+            height: auto;
+            margin: 0 auto var(--space-md);
+            display: block;
+            border-radius: var(--border-radius-sm);
+            filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
+        }
+
+        .form-title {
+            text-align: center;
+            color: var(--primary-color);
+            font-family: var(--font-secondary);
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: var(--space-lg);
+            position: relative;
+            padding-bottom: var(--space-sm);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .form-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--primary-light), transparent);
+        }
+
+        /* ===== INPUT DE CONSULTA ===== */
+        .input-group {
+            position: relative;
+            margin-bottom: var(--space-lg);
+        }
+
+        .input-label {
+            position: absolute;
+            top: -10px;
+            left: 12px;
+            font-size: 0.8rem;
+            color: var(--primary-color);
+            font-weight: 600;
+            background: var(--bg-white);
+            padding: 0 var(--space-xs);
+            z-index: 2;
+            letter-spacing: 0.5px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 14px 16px;
+            font-size: 1rem;
+            background-color: var(--bg-light);
+            border: 2px solid var(--border-color);
+            border-radius: var(--border-radius-md);
+            outline: none;
+            transition: all var(--transition-fast);
+            font-family: var(--font-primary);
+            text-align: center;
+        }
+
+        .form-input:focus {
+            border-color: var(--primary-light);
+            background-color: var(--bg-white);
+            box-shadow: 0 0 0 3px rgba(88, 188, 130, 0.1);
+        }
+
+        /* ===== BOTÓN DE CONSULTA ===== */
+        .submit-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+            color: white;
+            border: none;
+            border-radius: var(--border-radius-xl);
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all var(--transition-normal);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+            overflow: hidden;
+            margin-bottom: var(--space-lg);
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(88, 188, 130, 0.3);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        /* ===== TICKET DE RESULTADO ===== */
+        .ticket-result {
+            display: none;
+            margin-top: var(--space-lg);
+            padding: var(--space-md);
+            border: 2px dashed var(--primary-light);
+            border-radius: var(--border-radius-lg);
+            background-color: var(--bg-white);
+        }
+
+        .status-badge {
+            display: block;
+            text-align: center;
+            padding: 10px;
+            border-radius: 10px;
+            font-weight: bold;
+            margin-bottom: var(--space-md);
+            text-transform: uppercase;
+        }
+
+        .data-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 4px;
+        }
+
+        .data-label { 
+            color: var(--text-light); 
+            font-weight: 600; 
+        }
+        
+        .data-value { 
+            color: var(--text-dark); 
+            font-weight: 500;
+        }
+
+        /* ===== REDES SOCIALES ===== */
+        .social-container {
+            display: flex;
+            justify-content: center;
+            gap: var(--space-lg);
+            margin-top: var(--space-lg);
+            padding-top: var(--space-lg);
+            border-top: 1px solid var(--border-color);
+        }
+
+        .social-link {
+            width: 45px;
+            height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg-light);
+            border-radius: 50%;
+            color: var(--primary-color);
+            font-size: 1.3rem;
+            transition: all var(--transition-normal);
+            text-decoration: none;
+        }
+
+        .social-link:hover {
+            transform: translateY(-3px);
+            background: var(--primary-light);
+            color: white;
+        }
+
+        /* ===== WHATSAPP FLOAT ===== */
+        .whatsapp-float {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 65px;
+            height: 65px;
+            background: linear-gradient(135deg, #25d366, #128c7e);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            box-shadow: var(--shadow-lg);
+            z-index: 1000;
+            text-decoration: none;
+            transition: all var(--transition-normal);
+        }
+
+        .whatsapp-float:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 30px rgba(37, 211, 102, 0.4);
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            :root {
+                --space-xl: 2rem;
+                --space-lg: 1.5rem;
+            }
+            
+            body {
+                padding: var(--space-sm);
+            }
+            
+            .form-container {
+                padding: var(--space-lg);
+            }
+            
+            .form-title {
+                font-size: 1.5rem;
+            }
+            
+            .social-container {
+                gap: var(--space-md);
+            }
+            
+            .whatsapp-float {
+                width: 55px;
+                height: 55px;
+                font-size: 1.7rem;
+                bottom: 20px;
+                right: 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .form-container {
+                padding: var(--space-md);
+            }
+            
+            .form-input {
+                padding: 12px;
+            }
+            
+            .submit-btn {
+                padding: 14px;
+            }
+            
+            .social-link {
+                width: 40px;
+                height: 40px;
+                font-size: 1.1rem;
+            }
+        }
     </style>
 </head>
 <body>
 
-<a href="https://wa.me/584129020243" class="whatsapp-float fade-in" target="_blank" aria-label="Contactar por WhatsApp">
+<a href="https://wa.me/584129020243" class="whatsapp-float" target="_blank">
     <i class="bi bi-whatsapp"></i>
 </a>
 
-<div class="container-main slide-up">
+<div class="container-main">
     <div class="form-container">
         <div class="company-header">
             <img src="https://raw.githubusercontent.com/r0g3rca/rma_firstsystem/main/Header.png" alt="First System Logo" class="company-logo">
@@ -32,271 +393,95 @@
 
         <div class="input-group">
             <label class="input-label">INGRESE N° DE ORDEN</label>
-            <input type="text" id="inputOrden" class="form-input" placeholder="Ej: 1111" autocomplete="off">
+            <input type="text" id="inputOrden" class="form-input" placeholder="Ej: 1111">
         </div>
 
-        <button class="submit-btn" onclick="consultarOrden()" id="consultarBtn">
-            <span class="btn-text">Consultar Ahora</span>
-        </button>
+        <button class="submit-btn" onclick="consultarOrden()">Consultar Ahora</button>
 
-        <!-- Mensaje de depuración -->
-        <div id="debugInfo" style="display: none; margin-top: 20px; padding: 15px; background: #f8f9fa; border-radius: 8px; font-size: 12px; font-family: monospace;">
-            <strong>Información de Depuración:</strong>
-            <div id="debugContent"></div>
-        </div>
-
-        <!-- Ticket de resultado -->
+        <!-- TICKET DE RESULTADO (igual al original) -->
         <div id="ticket" class="ticket-result">
-            <!-- ... (mantén la estructura del ticket) ... -->
+            <div id="estatusBadge" class="status-badge"></div>
+            <div class="data-row"><span class="data-label">Orden:</span> <span class="data-value" id="res-orden"></span></div>
+            <div class="data-row"><span class="data-label">Equipo:</span> <span class="data-value" id="res-equipo"></span></div>
+            <div class="data-row"><span class="data-label">Serial:</span> <span class="data-value" id="res-serial"></span></div>
+            <div class="data-row"><span class="data-label">Falla:</span> <span class="data-value" id="res-falla"></span></div>
+            <div class="mt-3 p-2 bg-light rounded shadow-sm">
+                <small class="data-label d-block mb-1">Diagnóstico Técnico:</small>
+                <span id="res-diagnostico" class="data-value" style="font-style: italic;"></span>
+            </div>
         </div>
 
         <div class="social-container">
-            <!-- ... (mantén los enlaces sociales) ... -->
+            <a href="index.html" title="Volver al Registro"><i class="bi bi-house-door"></i></a>
+            <a href="https://facebook.com/firstsystem" target="_blank"><i class="bi bi-facebook"></i></a>
+            <a href="https://instagram.com/firstsystem" target="_blank"><i class="bi bi-instagram"></i></a>
         </div>
     </div>
 </div>
 
 <script>
+    // USAR LA MISMA URL DEL SCRIPT ORIGINAL
     const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzpD2MIOA1r_aSM3ifDU6m86LCufQLnXmkMiGDjX4kU_hSoclHAPc5zanmxZeiKQe6zEw/exec';
-
-    // Función para mostrar información de depuración
-    function showDebugInfo(info) {
-        const debugDiv = document.getElementById('debugInfo');
-        const debugContent = document.getElementById('debugContent');
-        
-        debugContent.innerHTML = `
-            <p><strong>URL solicitada:</strong> ${info.url}</p>
-            <p><strong>Orden consultada:</strong> ${info.orden}</p>
-            <p><strong>Respuesta HTTP:</strong> ${info.status}</p>
-            <p><strong>Estado:</strong> ${info.statusText}</p>
-            <p><strong>Respuesta cruda:</strong></p>
-            <pre style="background: white; padding: 10px; border-radius: 5px; overflow: auto;">${JSON.stringify(info.rawResponse, null, 2)}</pre>
-            <p><strong>Error:</strong> ${info.error || 'Ninguno'}</p>
-        `;
-        debugDiv.style.display = 'block';
-    }
-
-    // Función para probar diferentes formatos de respuesta
-    async function testConnection() {
-        const testOrden = '1111'; // Número de prueba
-        const testUrl = `${SCRIPT_URL}?orden=${testOrden}`;
-        
-        console.log('🔍 Probando conexión con:', testUrl);
-        
-        try {
-            const response = await fetch(testUrl);
-            console.log('📊 Respuesta recibida:', response);
-            
-            // Intentar diferentes formas de leer la respuesta
-            const textResponse = await response.text();
-            console.log('📄 Respuesta en texto:', textResponse);
-            
-            // Intentar parsear como JSON
-            try {
-                const jsonResponse = JSON.parse(textResponse);
-                console.log('✅ JSON parseado:', jsonResponse);
-                return { success: true, data: jsonResponse, raw: textResponse };
-            } catch (e) {
-                console.log('⚠️ No es JSON válido, es texto plano:', textResponse);
-                return { success: false, data: null, raw: textResponse };
-            }
-        } catch (error) {
-            console.error('❌ Error en la conexión:', error);
-            return { success: false, error: error.message, data: null };
-        }
-    }
 
     async function consultarOrden() {
         const orden = document.getElementById('inputOrden').value.trim();
         const ticket = document.getElementById('ticket');
-        const mensaje = document.getElementById('mensaje');
-        const btn = document.getElementById('consultarBtn');
-        const btnText = btn.querySelector('.btn-text');
+        const btn = document.querySelector('.submit-btn');
 
-        // Ocultar ticket anterior y mensaje
-        ticket.style.display = 'none';
-        
         if (!orden) {
-            alert('Por favor, ingrese un número de orden');
+            alert("Por favor, ingrese un número de orden.");
             return;
         }
 
-        // Mostrar estado de carga
-        const originalText = btnText.textContent;
-        btnText.innerHTML = '<span class="loading"></span>Buscando...';
         btn.disabled = true;
+        btn.textContent = "Buscando...";
+        ticket.style.display = 'none';
 
         try {
-            // Opción 1: Consulta directa (como estaba originalmente)
-            const url = `${SCRIPT_URL}?orden=${encodeURIComponent(orden)}`;
-            console.log('🔗 URL de consulta:', url);
-            
-            const response = await fetch(url);
-            console.log('📡 Respuesta HTTP:', response);
-            
-            // Mostrar información de depuración
-            showDebugInfo({
-                url: url,
-                orden: orden,
-                status: response.status,
-                statusText: response.statusText,
-                rawResponse: await response.text()
-            });
-            
-            // Re-hacer la petición para procesar la respuesta
-            const response2 = await fetch(url);
-            let data;
-            
-            // Intentar diferentes formatos de respuesta
-            try {
-                // Primero intentar como JSON
-                data = await response2.json();
-            } catch (jsonError) {
-                // Si falla, intentar como texto
-                const textResponse = await response2.text();
-                console.log('📄 Respuesta en texto:', textResponse);
-                
-                // Intentar extraer datos de diferentes formatos
-                if (textResponse.includes('orden') || textResponse.includes('descripcion')) {
-                    // Buscar datos en el texto
-                    const ordenMatch = textResponse.match(/orden["':\s]*([^,}\s]+)/i);
-                    const descripcionMatch = textResponse.match(/descripcion["':\s]*([^,}\s]+)/i);
-                    
-                    data = {
-                        orden: ordenMatch ? ordenMatch[1] : orden,
-                        descripcion: descripcionMatch ? descripcionMatch[1] : 'No disponible',
-                        serial: 'No disponible',
-                        falla: 'No disponible',
-                        estatus: 'EN PROCESO',
-                        detalle: 'Datos obtenidos del sistema'
-                    };
-                } else {
-                    throw new Error('Formato de respuesta no reconocido');
-                }
-            }
-            
-            // Procesar los datos recibidos
+            const response = await fetch(`${SCRIPT_URL}?orden=${orden}`);
+            const data = await response.json();
+
             if (data) {
-                console.log('✅ Datos procesados:', data);
+                document.getElementById('res-orden').textContent = data.orden;
+                document.getElementById('res-equipo').textContent = data.descripcion;
+                document.getElementById('res-serial').textContent = data.serial;
+                document.getElementById('res-falla').textContent = data.falla;
+                document.getElementById('res-diagnostico').textContent = data.detalle || "En revisión...";
+
+                const badge = document.getElementById('estatusBadge');
+                badge.textContent = data.estatus;
                 
-                // Mapear los campos (ajusta según la estructura real de tu script)
-                const orderData = {
-                    orden: data.orden || data.numeroOrden || data.Numero || orden,
-                    descripcion: data.descripcion || data.equipo || data.Descripcion || 'No disponible',
-                    serial: data.serial || data.Serial || 'No disponible',
-                    falla: data.falla || data.Falla || data.problema || 'No disponible',
-                    estatus: data.estatus || data.Estatus || data.status || 'PENDIENTE',
-                    detalle: data.detalle || data.Detalle || data.diagnostico || 'Pendiente de diagnóstico...',
-                    fecha: data.fecha || data.Fecha || data.fechaIngreso || 'No registrada',
-                    tecnico: data.tecnico || data.Tecnico || data.responsable || 'Por asignar'
-                };
-                
-                // Actualizar la interfaz con los datos
-                updateTicket(orderData);
-                
-                // Mostrar ticket
+                // Colores según estatus (igual al original)
+                if (data.estatus === 'ENTREGADO') {
+                    badge.style.backgroundColor = '#d1e7dd';
+                    badge.style.color = '#0f5132';
+                } else if (data.estatus === 'EN PROCESO') {
+                    badge.style.backgroundColor = '#fff3cd';
+                    badge.style.color = '#856404';
+                } else {
+                    badge.style.backgroundColor = '#f8d7da';
+                    badge.style.color = '#721c24';
+                }
+
                 ticket.style.display = 'block';
-                
-                alert('✅ Orden encontrada en el sistema');
             } else {
-                throw new Error('No se recibieron datos de la orden');
+                alert("Orden no encontrada. Verifique el número.");
             }
-
-        } catch (error) {
-            console.error('❌ Error en la consulta:', error);
-            
-            // Mostrar información detallada del error
-            showDebugInfo({
-                url: `${SCRIPT_URL}?orden=${orden}`,
-                orden: orden,
-                error: error.message,
-                rawResponse: error.toString()
-            });
-            
-            alert('❌ Error al consultar la orden. Revise la consola para más detalles.');
-            
+        } catch (e) {
+            alert("Error de conexión con el sistema.");
+            console.error("Error:", e);
         } finally {
-            // Restaurar botón
-            btnText.textContent = originalText;
             btn.disabled = false;
+            btn.textContent = "Consultar Ahora";
         }
     }
 
-    // Función para actualizar el ticket con datos
-    function updateTicket(data) {
-        document.getElementById('res-orden').textContent = data.orden;
-        document.getElementById('res-equipo').textContent = data.descripcion;
-        document.getElementById('res-serial').textContent = data.serial;
-        document.getElementById('res-falla').textContent = data.falla;
-        document.getElementById('res-fecha').textContent = data.fecha;
-        document.getElementById('res-tecnico').textContent = data.tecnico;
-        document.getElementById('res-diagnostico').textContent = data.detalle;
-
-        // Configurar badge según estatus
-        const badge = document.getElementById('estatusBadge');
-        const status = data.estatus ? data.estatus.toUpperCase() : 'PENDIENTE';
-        
-        badge.textContent = `ESTATUS: ${status}`;
-        badge.className = 'status-badge ';
-        
-        // Aplicar clase según estatus
-        if (status.includes('PENDIENTE') || status.includes('RECIBIDO')) {
-            badge.classList.add('status-pending');
-        } else if (status.includes('PROCESANDO') || status.includes('REPARACIÓN')) {
-            badge.classList.add('status-processing');
-        } else if (status.includes('LISTO') || status.includes('REPARADO')) {
-            badge.classList.add('status-ready');
-        } else if (status.includes('ENTREGADO') || status.includes('FINALIZADO')) {
-            badge.classList.add('status-delivered');
-        } else {
-            badge.classList.add('status-processing');
-        }
-    }
-
-    // Función para probar el script manualmente
-    async function testScript() {
-        console.log('🧪 Iniciando prueba del script...');
-        const result = await testConnection();
-        
-        if (result.success) {
-            console.log('✅ Conexión exitosa. Estructura de datos:', result.data);
-            alert('✅ Conexión exitosa. Revisa la consola para ver la estructura de datos.');
-        } else {
-            console.log('❌ Conexión fallida. Respuesta:', result.raw);
-            alert('❌ Conexión fallida. Revisa la consola para más detalles.');
-        }
-    }
-
-    // Permitir consultar con Enter
-    document.getElementById('inputOrden').addEventListener('keypress', (e) => {
+    // Permitir consultar con Enter (mantener)
+    document.getElementById('inputOrden').addEventListener('keypress', function(e) {
         if (e.key === 'Enter') {
             consultarOrden();
         }
     });
-
-    // Inicialización
-    document.addEventListener('DOMContentLoaded', () => {
-        console.log('🚀 Página de consulta cargada');
-        console.log('📋 Script URL:', SCRIPT_URL);
-        
-        // Opcional: Probar automáticamente al cargar
-        // testScript();
-        
-        // Verificar si hay un parámetro de orden en la URL
-        const urlParams = new URLSearchParams(window.location.search);
-        const ordenParam = urlParams.get('orden');
-        
-        if (ordenParam) {
-            document.getElementById('inputOrden').value = ordenParam;
-            console.log('🔍 Orden desde URL:', ordenParam);
-        }
-    });
 </script>
-
-<!-- Botón para depuración (opcional) -->
-<button onclick="testScript()" style="position: fixed; bottom: 100px; right: 30px; z-index: 1000; padding: 10px; background: #ff9800; color: white; border: none; border-radius: 5px; cursor: pointer;">
-    🔧 Probar Script
-</button>
-
 </body>
 </html>
