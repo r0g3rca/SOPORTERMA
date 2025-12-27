@@ -420,8 +420,8 @@
 </div>
 
 <script>
-    // USAR LA MISMA URL DEL SCRIPT ORIGINAL
-    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzpD2MIOA1r_aSM3ifDU6m86LCufQLnXmkMiGDjX4kU_hSoclHAPc5zanmxZeiKQe6zEw/exec';
+    // URL ACTUALIZADA con tu nuevo Google Apps Script
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzJ0t1eRhbvFYSqlwFxzi2faXc0A9Rc4mnasyFJCc7qc422fhK9mVXzIGd3_3w6BnTV0Q/exec';
 
     async function consultarOrden() {
         const orden = document.getElementById('inputOrden').value.trim();
@@ -438,10 +438,18 @@
         ticket.style.display = 'none';
 
         try {
-            const response = await fetch(`${SCRIPT_URL}?orden=${orden}`);
+            // Hacer la petición con el parámetro "orden" (en español)
+            const response = await fetch(`${SCRIPT_URL}?orden=${encodeURIComponent(orden)}`);
+            
+            // Verificar si la respuesta es OK
+            if (!response.ok) {
+                throw new Error(`Error HTTP: ${response.status}`);
+            }
+            
+            // Intentar parsear la respuesta como JSON
             const data = await response.json();
 
-            if (data) {
+            if (data && data.orden) {
                 document.getElementById('res-orden').textContent = data.orden;
                 document.getElementById('res-equipo').textContent = data.descripcion;
                 document.getElementById('res-serial').textContent = data.serial;
@@ -449,7 +457,7 @@
                 document.getElementById('res-diagnostico').textContent = data.detalle || "En revisión...";
 
                 const badge = document.getElementById('estatusBadge');
-                badge.textContent = data.estatus;
+                badge.textContent = data.estatus || "PENDIENTE";
                 
                 // Colores según estatus (igual al original)
                 if (data.estatus === 'ENTREGADO') {
@@ -468,15 +476,15 @@
                 alert("Orden no encontrada. Verifique el número.");
             }
         } catch (e) {
-            alert("Error de conexión con el sistema.");
-            console.error("Error:", e);
+            console.error("Error de conexión:", e);
+            alert("Error de conexión con el sistema. Intente nuevamente.");
         } finally {
             btn.disabled = false;
             btn.textContent = "Consultar Ahora";
         }
     }
 
-    // Permitir consultar con Enter (mantener)
+    // Permitir consultar con Enter
     document.getElementById('inputOrden').addEventListener('keypress', function(e) {
         if (e.key === 'Enter') {
             consultarOrden();
