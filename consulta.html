@@ -6,191 +6,699 @@
     <title>FIRST SYSTEM - Consulta de Estatus</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
     <style>
-        body {
+        /* ===== VARIABLES CSS (Consistentes con index.html) ===== */
+        :root {
+            /* Colores principales */
+            --primary-color: #2e7d32;
+            --primary-light: #58bc82;
+            --primary-dark: #1b5e20;
+            --accent-color: #45a56b;
+            --success-color: #4caf50;
+            --warning-color: #ff9800;
+            --danger-color: #f44336;
+            --info-color: #2196f3;
+            
+            /* Colores neutrales */
+            --bg-light: #f8f9fa;
+            --bg-white: #ffffff;
+            --text-dark: #2d3748;
+            --text-light: #718096;
+            --border-color: #e2e8f0;
+            --shadow-color: rgba(0, 0, 0, 0.08);
+            
+            /* Espaciado */
+            --space-xs: 0.5rem;
+            --space-sm: 1rem;
+            --space-md: 1.5rem;
+            --space-lg: 2rem;
+            --space-xl: 3rem;
+            
+            /* Bordes */
+            --border-radius-sm: 8px;
+            --border-radius-md: 12px;
+            --border-radius-lg: 20px;
+            --border-radius-xl: 30px;
+            
+            /* Sombras */
+            --shadow-sm: 0 2px 8px var(--shadow-color);
+            --shadow-md: 0 10px 25px var(--shadow-color);
+            --shadow-lg: 0 15px 35px var(--shadow-color);
+            
+            /* Transiciones */
+            --transition-fast: 0.2s ease;
+            --transition-normal: 0.3s ease;
+            --transition-slow: 0.5s ease;
+            
+            /* Fuentes */
+            --font-primary: 'Poppins', sans-serif;
+            --font-secondary: 'Montserrat', sans-serif;
+        }
+
+        /* ===== RESET Y ESTILOS BASE ===== */
+        * {
             margin: 0;
-            padding: 20px;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-primary);
+            line-height: 1.6;
+            color: var(--text-dark);
+            background: linear-gradient(135deg, #f3f4f7 0%, #e8f5e9 100%);
+            min-height: 100vh;
+            padding: var(--space-md);
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 100vh;
-            font-family: 'Poppins', sans-serif;
-            background: linear-gradient(45deg, #f3f4f7, #e8f5e9);
-        }
-
-        .container-main {
-            max-width: 650px;
-            width: 100%;
-        }
-
-        .login-form {
-            width: 100%;
-            padding: 30px;
-            background: rgba(255, 255, 255, 0.98);
-            border-radius: 20px;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
-            border: 1px solid rgba(88, 188, 130, 0.3);
-        }
-
-        .header-img {
-            width: 100%;
-            max-height: 150px;
-            object-fit: contain;
-            border-radius: 12px;
-            margin-bottom: 20px;
-        }
-
-        .form-heading {
-            text-align: center;
-            color: #2e7d32;
-            font-size: 1.5rem;
-            font-weight: 700;
-            margin-bottom: 20px;
-            text-transform: uppercase;
-        }
-
-        .input-group {
             position: relative;
-            margin-bottom: 20px;
         }
 
-        .input-group .label {
-            position: absolute;
-            top: -10px;
-            left: 12px;
-            font-size: 11px;
-            color: #45a56b;
-            font-weight: 700;
-            background: white;
-            padding: 0 5px;
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(88, 188, 130, 0.1) 0%, transparent 40%),
+                radial-gradient(circle at 80% 20%, rgba(46, 125, 50, 0.1) 0%, transparent 40%);
+            z-index: -1;
+        }
+
+        /* ===== CONTENEDOR PRINCIPAL ===== */
+        .container-main {
+            max-width: 800px;
+            width: 100%;
+            margin: 0 auto;
+            position: relative;
             z-index: 1;
         }
 
-        .input-group input {
+        /* ===== FORMULARIO DE CONSULTA ===== */
+        .form-container {
+            background: var(--bg-white);
+            border-radius: var(--border-radius-lg);
+            padding: var(--space-xl);
+            box-shadow: var(--shadow-lg);
+            border: 1px solid rgba(88, 188, 130, 0.2);
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .form-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
             width: 100%;
-            padding: 12px 15px;
-            font-size: 1rem;
-            background-color: #fafafa;
-            border: 2px solid #eee;
-            border-radius: 10px;
-            outline: none;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-color), var(--primary-light));
+        }
+
+        .company-header {
             text-align: center;
+            margin-bottom: var(--space-lg);
         }
 
-        .submit {
-            width: 100%;
-            padding: 12px;
-            background-color: #58bc82;
-            color: #fff;
-            border: none;
-            border-radius: 25px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: 0.3s;
+        .company-logo {
+            max-width: 280px;
+            height: auto;
+            margin: 0 auto var(--space-md);
+            display: block;
+            border-radius: var(--border-radius-sm);
+            filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
+        }
+
+        .form-title {
+            text-align: center;
+            color: var(--primary-color);
+            font-family: var(--font-secondary);
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: var(--space-lg);
+            position: relative;
+            padding-bottom: var(--space-sm);
             text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
-        .submit:hover {
-            background-color: #45a56b;
-            transform: scale(1.02);
+        .form-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--primary-light), transparent);
         }
 
-        /* DISEÑO DEL TICKET DE RESULTADO */
+        /* ===== INPUT DE CONSULTA ===== */
+        .input-group {
+            position: relative;
+            margin-bottom: var(--space-lg);
+        }
+
+        .input-label {
+            position: absolute;
+            top: -10px;
+            left: 12px;
+            font-size: 0.8rem;
+            color: var(--primary-color);
+            font-weight: 600;
+            background: var(--bg-white);
+            padding: 0 var(--space-xs);
+            z-index: 2;
+            letter-spacing: 0.5px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 16px 20px;
+            font-size: 1.1rem;
+            background-color: var(--bg-light);
+            border: 2px solid var(--border-color);
+            border-radius: var(--border-radius-md);
+            outline: none;
+            transition: all var(--transition-fast);
+            font-family: var(--font-primary);
+            text-align: center;
+            letter-spacing: 1px;
+        }
+
+        .form-input:focus {
+            border-color: var(--primary-light);
+            background-color: var(--bg-white);
+            box-shadow: 0 0 0 4px rgba(88, 188, 130, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .form-input::placeholder {
+            color: var(--text-light);
+            opacity: 0.7;
+        }
+
+        /* ===== BOTÓN DE CONSULTA ===== */
+        .submit-btn {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+            color: white;
+            border: none;
+            border-radius: var(--border-radius-xl);
+            font-weight: 600;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all var(--transition-normal);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+            overflow: hidden;
+            margin-bottom: var(--space-lg);
+        }
+
+        .submit-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: var(--transition-normal);
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(88, 188, 130, 0.3);
+        }
+
+        .submit-btn:hover::before {
+            left: 100%;
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        /* ===== TICKET DE RESULTADO ===== */
         .ticket-result {
             display: none;
-            margin-top: 25px;
-            padding: 20px;
-            border: 2px dashed #58bc82;
-            border-radius: 15px;
-            background-color: #fff;
+            margin-top: var(--space-lg);
+            padding: var(--space-xl);
+            border: 2px solid var(--primary-light);
+            border-radius: var(--border-radius-lg);
+            background: linear-gradient(135deg, #f8fff9 0%, #ffffff 100%);
+            box-shadow: var(--shadow-md);
+            animation: slideDown 0.5s ease forwards;
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .status-badge {
-            display: block;
-            text-align: center;
-            padding: 8px;
-            border-radius: 10px;
-            font-weight: bold;
-            margin-bottom: 15px;
+            display: inline-block;
+            padding: 10px 25px;
+            border-radius: var(--border-radius-xl);
+            font-weight: 700;
+            font-size: 1.1rem;
             text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: var(--space-lg);
+            text-align: center;
+            width: 100%;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .status-pending {
+            background: linear-gradient(135deg, #fff3cd, #ffeaa7);
+            color: #856404;
+            border: 2px solid #ffd166;
+        }
+
+        .status-processing {
+            background: linear-gradient(135deg, #cce5ff, #b3d7ff);
+            color: #004085;
+            border: 2px solid #b8daff;
+        }
+
+        .status-ready {
+            background: linear-gradient(135deg, #d4edda, #c3e6cb);
+            color: #155724;
+            border: 2px solid #c3e6cb;
+        }
+
+        .status-delivered {
+            background: linear-gradient(135deg, #d1ecf1, #bee5eb);
+            color: #0c5460;
+            border: 2px solid #bee5eb;
+        }
+
+        /* ===== DATOS DEL TICKET ===== */
+        .ticket-data {
+            margin-bottom: var(--space-lg);
         }
 
         .data-row {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 8px;
-            font-size: 0.9rem;
-            border-bottom: 1px solid #f0f0f0;
-            padding-bottom: 4px;
+            align-items: flex-start;
+            margin-bottom: 12px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(88, 188, 130, 0.1);
+            transition: var(--transition-fast);
         }
 
-        .data-label { color: #666; font-weight: 600; }
-        .data-value { color: #333; }
+        .data-row:hover {
+            background-color: rgba(88, 188, 130, 0.05);
+            padding-left: 10px;
+            padding-right: 10px;
+            margin-left: -10px;
+            margin-right: -10px;
+            border-radius: var(--border-radius-sm);
+        }
 
-        .social-links {
+        .data-label {
+            font-weight: 600;
+            color: var(--primary-color);
+            min-width: 140px;
+            font-size: 0.9rem;
+        }
+
+        .data-value {
+            color: var(--text-dark);
+            text-align: right;
+            flex: 1;
+            font-weight: 500;
+            line-height: 1.5;
+        }
+
+        .diagnostico-container {
+            background: linear-gradient(135deg, #f8f9fa, #ffffff);
+            border-radius: var(--border-radius-md);
+            padding: var(--space-md);
+            border-left: 4px solid var(--primary-light);
+            margin-top: var(--space-lg);
+        }
+
+        .diagnostico-label {
+            font-weight: 700;
+            color: var(--primary-dark);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .diagnostico-label i {
+            font-size: 1.2rem;
+        }
+
+        .diagnostico-text {
+            color: var(--text-dark);
+            line-height: 1.7;
+            padding: 10px;
+            background: var(--bg-white);
+            border-radius: var(--border-radius-sm);
+            border: 1px solid var(--border-color);
+        }
+
+        /* ===== REDES SOCIALES ===== */
+        .social-container {
             display: flex;
             justify-content: center;
-            gap: 20px;
-            margin-top: 25px;
-            padding-top: 15px;
-            border-top: 1px solid #eee;
+            gap: var(--space-lg);
+            margin-top: var(--space-xl);
+            padding-top: var(--space-lg);
+            border-top: 1px solid var(--border-color);
         }
 
-        .social-links a { font-size: 1.5rem; color: #58bc82; transition: 0.3s; }
+        .social-link {
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg-light);
+            border-radius: 50%;
+            color: var(--primary-color);
+            font-size: 1.4rem;
+            transition: all var(--transition-normal);
+            text-decoration: none;
+            position: relative;
+            overflow: hidden;
+        }
 
+        .social-link::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+            opacity: 0;
+            transition: var(--transition-normal);
+        }
+
+        .social-link i {
+            position: relative;
+            z-index: 1;
+        }
+
+        .social-link:hover {
+            transform: translateY(-3px) scale(1.1);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .social-link:hover::before {
+            opacity: 1;
+        }
+
+        .social-link:hover i {
+            color: white;
+        }
+
+        .home-link {
+            background: linear-gradient(135deg, var(--primary-light), var(--primary-color));
+            color: white;
+        }
+
+        .home-link:hover::before {
+            opacity: 0;
+        }
+
+        /* ===== WHATSAPP FLOAT ===== */
         .whatsapp-float {
             position: fixed;
             bottom: 30px;
             right: 30px;
-            background-color: #25d366;
+            width: 65px;
+            height: 65px;
+            background: linear-gradient(135deg, #25d366, #128c7e);
             color: white;
-            width: 60px;
-            height: 60px;
             border-radius: 50%;
             display: flex;
-            justify-content: center;
             align-items: center;
-            font-size: 35px;
-            box-shadow: 2px 5px 15px rgba(0,0,0,0.2);
-            z-index: 100;
+            justify-content: center;
+            font-size: 2rem;
+            box-shadow: var(--shadow-lg);
+            z-index: 1000;
             text-decoration: none;
+            transition: all var(--transition-normal);
+            animation: pulse 2s infinite;
+        }
+
+        .whatsapp-float:hover {
+            transform: scale(1.1) rotate(5deg);
+            box-shadow: 0 8px 30px rgba(37, 211, 102, 0.4);
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7); }
+            70% { box-shadow: 0 0 0 15px rgba(37, 211, 102, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); }
+        }
+
+        /* ===== MENSAJES ===== */
+        .message {
+            text-align: center;
+            margin-top: var(--space-md);
+            padding: var(--space-sm);
+            border-radius: var(--border-radius-sm);
+            font-weight: 600;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .message.success {
+            background-color: rgba(76, 175, 80, 0.1);
+            color: var(--success-color);
+            border: 1px solid rgba(76, 175, 80, 0.3);
+        }
+
+        .message.error {
+            background-color: rgba(244, 67, 54, 0.1);
+            color: var(--danger-color);
+            border: 1px solid rgba(244, 67, 54, 0.3);
+        }
+
+        .message.info {
+            background-color: rgba(33, 150, 243, 0.1);
+            color: var(--info-color);
+            border: 1px solid rgba(33, 150, 243, 0.3);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ===== EFECTO DE CARGA ===== */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 8px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            :root {
+                --space-xl: 2rem;
+                --space-lg: 1.5rem;
+            }
+            
+            body {
+                padding: var(--space-sm);
+            }
+            
+            .form-container {
+                padding: var(--space-lg);
+            }
+            
+            .form-title {
+                font-size: 1.6rem;
+            }
+            
+            .company-logo {
+                max-width: 220px;
+            }
+            
+            .form-input {
+                padding: 14px 16px;
+                font-size: 1rem;
+            }
+            
+            .submit-btn {
+                padding: 16px;
+                font-size: 1rem;
+            }
+            
+            .data-row {
+                flex-direction: column;
+                gap: 5px;
+            }
+            
+            .data-label, .data-value {
+                width: 100%;
+                text-align: left;
+            }
+            
+            .social-container {
+                gap: var(--space-md);
+            }
+            
+            .whatsapp-float {
+                width: 55px;
+                height: 55px;
+                font-size: 1.7rem;
+                bottom: 20px;
+                right: 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .form-container {
+                padding: var(--space-md);
+            }
+            
+            .form-title {
+                font-size: 1.4rem;
+            }
+            
+            .ticket-result {
+                padding: var(--space-lg);
+            }
+            
+            .status-badge {
+                font-size: 1rem;
+                padding: 8px 20px;
+            }
+            
+            .social-link {
+                width: 45px;
+                height: 45px;
+                font-size: 1.2rem;
+            }
+        }
+
+        /* ===== ANIMACIONES ===== */
+        .fade-in {
+            animation: fadeIn 0.8s ease forwards;
+        }
+
+        .slide-up {
+            animation: slideUp 0.5s ease forwards;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
     </style>
 </head>
 <body>
 
-<a href="https://wa.me/584129020243" class="whatsapp-float" target="_blank">
+<a href="https://wa.me/584129020243" class="whatsapp-float fade-in" target="_blank" aria-label="Contactar por WhatsApp">
     <i class="bi bi-whatsapp"></i>
 </a>
 
-<div class="container-main">
-    <div class="login-form">
-        <img src="imagenes/header.png" class="header-img" alt="First System">
-        <p class="form-heading">Consulta de Estatus</p>
-
-        <div class="input-group">
-            <label class="label">INGRESE N° DE ORDEN</label>
-            <input type="text" id="inputOrden" placeholder="Ej: 1111">
+<div class="container-main slide-up">
+    <div class="form-container">
+        <div class="company-header">
+            <img src="https://raw.githubusercontent.com/r0g3rca/rma_firstsystem/main/Header.png" alt="First System Logo" class="company-logo">
         </div>
 
-        <button class="submit" onclick="consultarOrden()">Consultar Ahora</button>
+        <h1 class="form-title">Consulta de Estatus</h1>
 
+        <div class="input-group">
+            <label class="input-label">INGRESE N° DE ORDEN</label>
+            <input type="text" id="inputOrden" class="form-input" placeholder="Ej: 1111" autocomplete="off">
+        </div>
+
+        <button class="submit-btn" onclick="consultarOrden()" id="consultarBtn">
+            <span class="btn-text">Consultar Ahora</span>
+        </button>
+
+        <!-- Mensaje de error -->
+        <div id="mensaje" class="message" style="display: none;"></div>
+
+        <!-- Ticket de resultado -->
         <div id="ticket" class="ticket-result">
             <div id="estatusBadge" class="status-badge"></div>
-            <div class="data-row"><span class="data-label">Orden:</span> <span class="data-value" id="res-orden"></span></div>
-            <div class="data-row"><span class="data-label">Equipo:</span> <span class="data-value" id="res-equipo"></span></div>
-            <div class="data-row"><span class="data-label">Serial:</span> <span class="data-value" id="res-serial"></span></div>
-            <div class="data-row"><span class="data-label">Falla:</span> <span class="data-value" id="res-falla"></span></div>
-            <div class="mt-3 p-2 bg-light rounded shadow-sm">
-                <small class="data-label d-block mb-1">Diagnóstico Técnico:</small>
-                <span id="res-diagnostico" class="data-value" style="font-style: italic;"></span>
+            
+            <div class="ticket-data">
+                <div class="data-row">
+                    <span class="data-label">N° Orden:</span>
+                    <span class="data-value" id="res-orden">---</span>
+                </div>
+                <div class="data-row">
+                    <span class="data-label">Equipo:</span>
+                    <span class="data-value" id="res-equipo">---</span>
+                </div>
+                <div class="data-row">
+                    <span class="data-label">Serial:</span>
+                    <span class="data-value" id="res-serial">---</span>
+                </div>
+                <div class="data-row">
+                    <span class="data-label">Falla Reportada:</span>
+                    <span class="data-value" id="res-falla">---</span>
+                </div>
+                <div class="data-row">
+                    <span class="data-label">Fecha de Ingreso:</span>
+                    <span class="data-value" id="res-fecha">---</span>
+                </div>
+                <div class="data-row">
+                    <span class="data-label">Técnico Asignado:</span>
+                    <span class="data-value" id="res-tecnico">---</span>
+                </div>
+            </div>
+
+            <div class="diagnostico-container">
+                <div class="diagnostico-label">
+                    <i class="bi bi-clipboard-check"></i>
+                    Diagnóstico Técnico
+                </div>
+                <div class="diagnostico-text" id="res-diagnostico">
+                    Pendiente de diagnóstico...
+                </div>
             </div>
         </div>
 
-        <div class="social-links">
-            <a href="index.html" title="Volver al Registro"><i class="bi bi-house-door"></i></a>
-            <a href="https://facebook.com/firstsystem" target="_blank"><i class="bi bi-facebook"></i></a>
-            <a href="https://instagram.com/firstsystem" target="_blank"><i class="bi bi-instagram"></i></a>
+        <div class="social-container">
+            <a href="index.html" class="social-link home-link" title="Volver al Registro">
+                <i class="bi bi-house-door"></i>
+            </a>
+            <a href="https://facebook.com/firstsystem" class="social-link" target="_blank" aria-label="Facebook">
+                <i class="bi bi-facebook"></i>
+            </a>
+            <a href="https://instagram.com/firstsystem" class="social-link" target="_blank" aria-label="Instagram">
+                <i class="bi bi-instagram"></i>
+            </a>
+            <a href="consulta.html" class="social-link" aria-label="Actualizar Consulta">
+                <i class="bi bi-arrow-clockwise"></i>
+            </a>
         </div>
     </div>
 </div>
@@ -201,41 +709,136 @@
     async function consultarOrden() {
         const orden = document.getElementById('inputOrden').value.trim();
         const ticket = document.getElementById('ticket');
-        const btn = document.querySelector('.submit');
+        const mensaje = document.getElementById('mensaje');
+        const btn = document.getElementById('consultarBtn');
+        const btnText = btn.querySelector('.btn-text');
 
-        if (!orden) return alert("Por favor, ingrese un número de orden.");
-
-        btn.disabled = true;
-        btn.textContent = "Buscando...";
+        // Ocultar ticket anterior y mensaje
         ticket.style.display = 'none';
+        mensaje.style.display = 'none';
+
+        if (!orden) {
+            mensaje.style.display = 'block';
+            mensaje.className = 'message error';
+            mensaje.innerHTML = '❌ <strong>Por favor, ingrese un número de orden válido</strong>';
+            return;
+        }
+
+        // Mostrar estado de carga
+        const originalText = btnText.textContent;
+        btnText.innerHTML = '<span class="loading"></span>Buscando...';
+        btn.disabled = true;
 
         try {
-            const response = await fetch(`${SCRIPT_URL}?orden=${orden}`);
+            // Realizar consulta
+            const response = await fetch(`${SCRIPT_URL}?orden=${encodeURIComponent(orden)}`);
+            
+            if (!response.ok) {
+                throw new Error(`Error HTTP: ${response.status}`);
+            }
+            
             const data = await response.json();
 
-            if (data) {
-                document.getElementById('res-orden').textContent = data.orden;
-                document.getElementById('res-equipo').textContent = data.descripcion;
-                document.getElementById('res-serial').textContent = data.serial;
-                document.getElementById('res-falla').textContent = data.falla;
-                document.getElementById('res-diagnostico').textContent = data.detalle || "En revisión...";
+            if (data && data.orden) {
+                // Actualizar datos en el ticket
+                document.getElementById('res-orden').textContent = data.orden || '---';
+                document.getElementById('res-equipo').textContent = data.descripcion || '---';
+                document.getElementById('res-serial').textContent = data.serial || '---';
+                document.getElementById('res-falla').textContent = data.falla || '---';
+                document.getElementById('res-fecha').textContent = data.fecha || '---';
+                document.getElementById('res-tecnico').textContent = data.tecnico || 'Por asignar';
+                document.getElementById('res-diagnostico').textContent = data.detalle || 'Pendiente de diagnóstico...';
 
+                // Configurar badge según estatus
                 const badge = document.getElementById('estatusBadge');
-                badge.textContent = data.estatus;
-                badge.style.backgroundColor = data.estatus === 'ENTREGADO' ? '#d1e7dd' : '#fff3cd';
-                badge.style.color = data.estatus === 'ENTREGADO' ? '#0f5132' : '#856404';
+                const status = data.estatus ? data.estatus.toUpperCase() : 'PENDIENTE';
+                
+                badge.textContent = `ESTATUS: ${status}`;
+                badge.className = 'status-badge '; // Resetear clases
+                
+                // Aplicar clase según estatus
+                if (status.includes('PENDIENTE') || status.includes('RECIBIDO')) {
+                    badge.classList.add('status-pending');
+                } else if (status.includes('PROCESANDO') || status.includes('REPARACIÓN')) {
+                    badge.classList.add('status-processing');
+                } else if (status.includes('LISTO') || status.includes('REPARADO')) {
+                    badge.classList.add('status-ready');
+                } else if (status.includes('ENTREGADO') || status.includes('FINALIZADO')) {
+                    badge.classList.add('status-delivered');
+                } else {
+                    badge.classList.add('status-processing');
+                }
 
+                // Mostrar ticket
                 ticket.style.display = 'block';
+                
+                // Mostrar mensaje de éxito
+                mensaje.style.display = 'block';
+                mensaje.className = 'message success';
+                mensaje.innerHTML = '✅ <strong>Orden encontrada</strong>';
+                
+                // Limpiar input después de 2 segundos
+                setTimeout(() => {
+                    mensaje.style.display = 'none';
+                }, 2000);
+
             } else {
-                alert("Orden no encontrada. Verifique el número.");
+                throw new Error('Orden no encontrada');
             }
-        } catch (e) {
-            alert("Error de conexión con el sistema.");
+
+        } catch (error) {
+            console.error('Error en la consulta:', error);
+            
+            // Mostrar mensaje de error
+            mensaje.style.display = 'block';
+            mensaje.className = 'message error';
+            
+            if (error.message.includes('Orden no encontrada')) {
+                mensaje.innerHTML = '❌ <strong>Orden no encontrada</strong><br><small>Verifique el número e intente nuevamente</small>';
+            } else {
+                mensaje.innerHTML = '❌ <strong>Error de conexión</strong><br><small>Por favor, intente más tarde</small>';
+            }
+            
+            // Ocultar ticket si hay error
+            ticket.style.display = 'none';
+
         } finally {
+            // Restaurar botón
+            btnText.textContent = originalText;
             btn.disabled = false;
-            btn.textContent = "Consultar Ahora";
+            
+            // Enfocar el input
+            document.getElementById('inputOrden').focus();
         }
     }
+
+    // Permitir consultar con Enter
+    document.getElementById('inputOrden').addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            consultarOrden();
+        }
+    });
+
+    // Efecto de focus mejorado
+    document.getElementById('inputOrden').addEventListener('focus', function() {
+        this.style.transform = 'translateY(-2px)';
+    });
+
+    document.getElementById('inputOrden').addEventListener('blur', function() {
+        this.style.transform = 'translateY(0)';
+    });
+
+    // Inicialización
+    document.addEventListener('DOMContentLoaded', () => {
+        // Verificar si hay un parámetro de orden en la URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const ordenParam = urlParams.get('orden');
+        
+        if (ordenParam) {
+            document.getElementById('inputOrden').value = ordenParam;
+            setTimeout(() => consultarOrden(), 500); // Consultar automáticamente después de medio segundo
+        }
+    });
 </script>
 </body>
 </html>
