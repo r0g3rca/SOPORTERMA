@@ -6,47 +6,67 @@
     <title>FIRST SYSTEM - Registro RMA</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        /* Estilos base para el fondo de la página */
         body {
-            background-color: #0a192f; /* Azul muy oscuro */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
+            background-color: #0a192f;
+            color: #ccd6f6;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
-            padding: 20px;
+            padding-bottom: 50px;
         }
 
-        /* Estilos de Uiverse.io adaptados */
+        /* Banner Superior */
+        .banner-container {
+            width: 100%;
+            background-color: #fff; /* Fondo blanco para resaltar el banner */
+            text-align: center;
+            padding: 10px 0;
+            margin-bottom: 30px;
+            box-shadow: 0px 5px 20px rgba(100, 255, 218, 0.2);
+        }
+        .banner-img {
+            max-width: 900px;
+            width: 100%;
+            height: auto;
+        }
+
+        /* Contenedor Principal */
+        .main-wrapper {
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            gap: 20px;
+            padding: 0 20px;
+        }
+
+        /* Imágenes Laterales */
+        .side-panel {
+            flex: 1;
+            max-width: 250px;
+            display: none; /* Se oculta en móviles */
+        }
+        @media (min-width: 1200px) {
+            .side-panel { display: block; }
+        }
+        .side-img {
+            width: 100%;
+            border-radius: 15px;
+            border: 1px solid #64ffda;
+            filter: drop-shadow(0px 0px 10px rgba(100, 255, 218, 0.3));
+        }
+
+        /* Estilo del Formulario (Uiverse) */
         .form-card1 {
             background-image: linear-gradient(163deg, #64ffda 0%, #64ffda 100%);
             border-radius: 22px;
             transition: all 0.3s;
+            flex: 2;
             max-width: 750px;
-            width: 100%;
         }
-
-        .form-card1:hover {
-            box-shadow: 0px 0px 30px 1px rgba(100, 255, 218, 0.3);
-        }
-
+        .form-card1:hover { box-shadow: 0px 0px 30px 1px rgba(100, 255, 218, 0.3); }
         .form-card2 {
             border-radius: 20px;
-            transition: all 0.2s;
             background-color: #171717;
-        }
-
-        .form-card2:hover {
-            transform: scale(0.98);
-        }
-
-        .form {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
             padding: 2em;
-            background-color: #171717;
-            border-radius: 20px;
         }
 
         .form-heading {
@@ -54,23 +74,19 @@
             color: #64ffda;
             font-size: 1.5em;
             font-weight: bold;
-            margin-bottom: 1em;
+            text-transform: uppercase;
+            margin-bottom: 1.5em;
         }
 
         .form-field {
             display: flex;
             align-items: center;
-            justify-content: center;
-            gap: 0.5em;
             border-radius: 10px;
             padding: 0.6em;
-            border: none;
-            outline: none;
-            color: white;
             background-color: #171717;
             box-shadow: inset 2px 5px 10px rgb(5, 5, 5);
+            margin-bottom: 15px;
         }
-
         .input-field {
             background: none;
             border: none;
@@ -79,151 +95,154 @@
             color: #ccd6f6;
             padding-inline: 1em;
         }
-
-        /* Estilo especial para el área de texto (falla) */
-        textarea.input-field {
-            min-height: 80px;
+        label {
+            color: #64ffda;
+            font-size: 0.75em;
+            margin-left: 5px;
+            font-weight: bold;
         }
 
         .sendMessage-btn {
             cursor: pointer;
-            margin-top: 1em;
+            width: 100%;
             padding: 1em;
             border-radius: 10px;
             border: none;
-            outline: none;
             background-color: transparent;
             color: #64ffda;
             font-weight: bold;
             outline: 1px solid #64ffda;
-            transition: all ease-in-out 0.3s;
+            transition: all 0.3s;
+            margin-top: 20px;
         }
-
         .sendMessage-btn:hover {
             background-color: #64ffda;
             color: #000;
-            box-shadow: inset 2px 5px 10px rgb(5, 5, 5);
         }
 
-        .btn-consulta-link {
+        /* Redes Sociales */
+        .social-bar {
+            margin-top: 25px;
             text-align: center;
-            color: #8892b0;
-            text-decoration: none;
-            font-size: 0.9em;
-            margin-top: 10px;
-            transition: 0.3s;
+            padding: 15px;
+            background: #112240;
+            border-radius: 15px;
         }
-
-        .btn-consulta-link:hover {
-            color: #64ffda;
+        .social-icon {
+            width: 35px;
+            margin: 0 10px;
+            transition: transform 0.3s;
+            filter: brightness(0) invert(1);
         }
-
-        label {
-            color: #64ffda;
-            font-size: 0.8em;
-            margin-left: 10px;
-            margin-bottom: -10px;
-        }
+        .social-icon:hover { transform: scale(1.2); }
     </style>
 </head>
 <body>
 
-<div class="form-card1">
-    <div class="form-card2">
-        <form class="form" id="formRegistro">
-            <p class="form-heading">FIRST SYSTEM - REGISTRO RMA</p>
-
-            <div class="row">
-                <div class="col-md-6 mb-3">
-                    <label>N° DE ORDEN</label>
-                    <div class="form-field">
-                        <input name="orden" placeholder="001055" class="input-field" type="text" required>
-                    </div>
-                </div>
-                <div class="col-md-6 mb-3">
-                    <label>VENDEDOR</label>
-                    <div class="form-field">
-                        <input name="vendedor" placeholder="Nombre" class="input-field" type="text" required>
-                    </div>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-md-6 mb-3">
-                    <label>N° DE CONTROL</label>
-                    <div class="form-field">
-                        <input name="control" placeholder="000975" class="input-field" type="text" required>
-                    </div>
-                </div>
-                <div class="col-md-6 mb-3">
-                    <label>CÓDIGO ARTÍCULO</label>
-                    <div class="form-field">
-                        <input name="codigo" placeholder="3014" class="input-field" type="text">
-                    </div>
-                </div>
-            </div>
-
-            <label>DESCRIPCIÓN DEL ARTÍCULO</label>
-            <div class="form-field">
-                <input name="descripcion" placeholder="Ej: SWITCH D-LINK" class="input-field" type="text" required>
-            </div>
-
-            <div class="row">
-                <div class="col-md-6 mb-3">
-                    <label>SERIAL</label>
-                    <div class="form-field">
-                        <input name="serial" placeholder="S/N" class="input-field" type="text" required>
-                    </div>
-                </div>
-                <div class="col-md-6 mb-3">
-                    <label>PROCEDENCIA</label>
-                    <div class="form-field">
-                        <input name="procedencia" placeholder="Ventas / Cliente" class="input-field" type="text">
-                    </div>
-                </div>
-            </div>
-
-            <label>FALLA REPORTADA</label>
-            <div class="form-field">
-                <textarea name="falla" placeholder="Describa el problema..." class="input-field" required></textarea>
-            </div>
-
-            <label>ACCESORIOS</label>
-            <div class="form-field">
-                <input name="accesorios" placeholder="Cargador, cables, etc." class="input-field" type="text">
-            </div>
-
-            <div class="row">
-                <div class="col-md-6 mb-3">
-                    <label>RECEPCIÓN</label>
-                    <div class="form-field">
-                        <input name="recepcion" placeholder="Quién recibe" class="input-field" type="text" required>
-                    </div>
-                </div>
-                <div class="col-md-6 mb-3">
-                    <label>TELÉFONO</label>
-                    <div class="form-field">
-                        <input name="telefono" placeholder="555-1234" class="input-field" type="tel">
-                    </div>
-                </div>
-            </div>
-
-            <label>CORREO ELECTRÓNICO</label>
-            <div class="form-field">
-                <input name="email" placeholder="cliente@correo.com" class="input-field" type="email">
-            </div>
-
-            <button class="sendMessage-btn" type="submit">REGISTRAR EN SISTEMA</button>
-            <a href="consulta.html" class="btn-consulta-link">🔍 Ir a Consultar Estatus</a>
-            
-            <div id="mensaje" class="text-center mt-2" style="display:none; color: #64ffda;"></div>
-        </form>
+    <div class="banner-container">
+        <img src="imagenes/DEPARTAMENTO TECNICO.png" class="banner-img" alt="First System RMA">
     </div>
-</div>
 
-<script>
-    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzpD2MIOA1r_aSM3ifDU6m86LCufQLnXmkMiGDjX4kU_hSoclHAPc5zanmxZeiKQe6zEw/exec';
-    const form = document.getElementById('formRegistro');
-    const msg = document.getElementById('mensaje');
+    <div class="main-wrapper">
+        
+        <div class="side-panel">
+            <img src="imagenes/1.png" class="side-img" alt="Tech 1">
+        </div>
 
-    form.addEventListener('
+        <div class="form-card1">
+            <div class="form-card2">
+                <form id="formRegistro">
+                    <p class="form-heading">Entrada de Equipos</p>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label>N° DE ORDEN</label>
+                            <div class="form-field"><input name="orden" placeholder="Ej: 1111" class="input-field" type="text" required></div>
+                        </div>
+                        <div class="col-md-6">
+                            <label>VENDEDOR</label>
+                            <div class="form-field"><input name="vendedor" placeholder="Nombre" class="input-field" type="text" required></div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label>N° DE CONTROL</label>
+                            <div class="form-field"><input name="control" placeholder="Ej: 203" class="input-field" type="text" required></div>
+                        </div>
+                        <div class="col-md-6">
+                            <label>CÓDIGO ARTÍCULO</label>
+                            <div class="form-field"><input name="codigo" placeholder="Código" class="input-field" type="text"></div>
+                        </div>
+                    </div>
+
+                    <label>DESCRIPCIÓN / EQUIPO</label>
+                    <div class="form-field"><input name="descripcion" placeholder="Ej: Laptop Gaming" class="input-field" type="text" required></div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label>SERIAL</label>
+                            <div class="form-field"><input name="serial" placeholder="S/N" class="input-field" type="text" required></div>
+                        </div>
+                        <div class="col-md-6">
+                            <label>PROCEDENCIA</label>
+                            <div class="form-field"><input name="procedencia" placeholder="Ventas / Cliente" class="input-field" type="text"></div>
+                        </div>
+                    </div>
+
+                    <label>FALLA REPORTADA</label>
+                    <div class="form-field"><textarea name="falla" class="input-field" style="height: 60px;" required></textarea></div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label>ACCESORIOS</label>
+                            <div class="form-field"><input name="accesorios" placeholder="Cargador, etc." class="input-field" type="text"></div>
+                        </div>
+                        <div class="col-md-6">
+                            <label>TELÉFONO</label>
+                            <div class="form-field"><input name="telefono" placeholder="Número" class="input-field" type="tel"></div>
+                        </div>
+                    </div>
+
+                    <button class="sendMessage-btn" type="submit">PROCESAR ENTRADA</button>
+                    
+                    <div class="social-bar">
+                        <p style="font-size: 0.8em; color: #64ffda;">SÍGUENOS EN NUESTRAS REDES</p>
+                        <a href="#"><img src="https://cdn-icons-png.flaticon.com/512/733/733547.png" class="social-icon"></a>
+                        <a href="https://wa.me/4129020243"><img src="https://cdn-icons-png.flaticon.com/512/733/733585.png" class="social-icon"></a>
+                        <a href="#"><img src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png" class="social-icon"></a>
+                    </div>
+                </form>
+                <div id="mensaje" class="text-center mt-3" style="display:none; color: #64ffda; font-weight: bold;"></div>
+            </div>
+        </div>
+
+        <div class="side-panel">
+            <img src="imagenes/2.png" class="side-img" alt="Tech 2">
+        </div>
+
+    </div>
+
+    <script>
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzpD2MIOA1r_aSM3ifDU6m86LCufQLnXmkMiGDjX4kU_hSoclHAPc5zanmxZeiKQe6zEw/exec';
+        const form = document.getElementById('formRegistro');
+        const msg = document.getElementById('mensaje');
+
+        form.addEventListener('submit', e => {
+            e.preventDefault();
+            msg.style.display = 'block';
+            msg.textContent = 'Sincronizando con RMA 2026...';
+
+            fetch(SCRIPT_URL, { method: 'POST', body: new FormData(form), mode: 'no-cors'})
+            .then(() => {
+                msg.textContent = '✅ REGISTRO PROCESADO CON ÉXITO';
+                form.reset();
+            })
+            .catch(error => {
+                msg.textContent = '❌ ERROR DE SERVIDOR';
+                console.error(error);
+            });
+        });
+    </script>
+</body>
+</html>
