@@ -15,7 +15,6 @@
             min-height: 100vh;
         }
         
-        /* BARRA SUPERIOR (NAVBAR) */
         .navbar { background: #2c3e50; padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; }
         .navbar a { 
             color: white; 
@@ -29,11 +28,10 @@
         }
         .navbar a:hover { background: #1abc9c; }
 
-        /* LAYOUT PRINCIPAL (3 COLUMNAS) */
         .main-wrapper {
             display: flex;
             justify-content: center;
-            align-items: flex-start; /* Alineación superior */
+            align-items: flex-start;
             gap: 20px;
             padding: 20px;
             flex: 1; 
@@ -49,10 +47,9 @@
             box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
 
-        /* TARJETA CENTRAL DE BÚSQUEDA */
         .search-card { 
             flex: 1;
-            max-width: 600px; /* Un poco más ancho para que se vea bien */
+            max-width: 600px;
             background: white; 
             border-radius: 8px; 
             box-shadow: 0 4px 15px rgba(0,0,0,0.1); 
@@ -60,7 +57,7 @@
             text-align: center;
         }
 
-        /* IMAGEN HEADER */
+        /* CORRECCIÓN: Header.png está en la raíz, no en carpetas */
         .card-header-img {
             width: 100%;
             height: auto;
@@ -70,72 +67,121 @@
         }
 
         .card-body { padding: 30px; }
-
         h1 { margin-top: 0; color: #2c3e50; font-size: 1.5rem; }
         p { color: #777; margin-bottom: 25px; }
 
-        /* INPUTS Y BOTONES */
-        input { 
-            width: 100%; 
-            padding: 15px; 
-            font-size: 18px; 
-            border: 2px solid #ddd; 
-            border-radius: 30px; 
-            text-align: center; 
-            box-sizing: border-box; 
-            margin-bottom: 15px; 
-            transition: 0.3s; 
-        }
+        input { width: 100%; padding: 15px; font-size: 18px; border: 2px solid #ddd; border-radius: 30px; text-align: center; box-sizing: border-box; margin-bottom: 15px; transition: 0.3s; }
         input:focus { border-color: #3498db; outline: none; }
 
-        button { 
-            width: 100%; 
-            padding: 15px; 
-            background: #3498db; 
-            color: white; 
-            font-size: 18px; 
-            border: none; 
-            border-radius: 30px; 
-            cursor: pointer; 
-            font-weight: bold; 
-            transition: 0.3s; 
-        }
+        button { width: 100%; padding: 15px; background: #3498db; color: white; font-size: 18px; border: none; border-radius: 30px; cursor: pointer; font-weight: bold; transition: 0.3s; }
         button:hover { background: #2980b9; }
 
-        /* RESULTADOS */
-        .result-box { 
-            margin-top: 30px; 
-            text-align: left; 
-            background: #f9f9f9; 
-            padding: 20px; 
-            border-radius: 8px; 
-            display: none; 
-            border: 1px solid #eee; 
-        }
-        .status-badge { 
-            display: inline-block; 
-            padding: 5px 15px; 
-            border-radius: 20px; 
-            color: white; 
-            font-weight: bold; 
-            font-size: 0.9em; 
-            margin-left: 10px; 
-        }
+        .result-box { margin-top: 30px; text-align: left; background: #f9f9f9; padding: 20px; border-radius: 8px; display: none; border: 1px solid #eee; }
+        .status-badge { display: inline-block; padding: 5px 15px; border-radius: 20px; color: white; font-weight: bold; font-size: 0.9em; margin-left: 10px; }
 
-        /* FOOTER */
-        footer {
-            background-color: #2c3e50;
-            color: white;
-            text-align: center;
-            padding: 15px;
-            font-size: 0.9rem;
-            margin-top: auto;
-        }
+        footer { background-color: #2c3e50; color: white; text-align: center; padding: 15px; font-size: 0.9rem; margin-top: auto; }
 
-        /* RESPONSIVE: OCULTAR IMÁGENES LATERALES EN MÓVIL */
         @media (max-width: 1100px) {
             .side-banner { display: none; } 
             .main-wrapper { padding: 10px; }
         }
     </style>
 </head>
+<body>
+
+    <div class="navbar">
+        <span style="color:white; font-weight:bold;">Sistema RMA</span>
+        <a href="index.html">🏠 Home</a>
+    </div>
+
+    <div class="main-wrapper">
+        <img src="https://raw.githubusercontent.com/r0g3rca/rma_firstsystem/main/imagenes/imagen%201.png" alt="Publicidad Izquierda" class="side-banner">
+
+        <div class="search-card">
+            <img src="https://raw.githubusercontent.com/r0g3rca/rma_firstsystem/main/Header.png" alt="Header" class="card-header-img">
+            
+            <div class="card-body">
+                <h1>Consulta de Reparación</h1>
+                <p>Ingrese su número de Orden, Serial o Control</p>
+                
+                <input type="text" id="txtBuscar" placeholder="Ej: 1001 ó SN12345">
+                <button onclick="buscarOrden()" id="btnBuscar">Consultar Estatus</button>
+                <p id="loading" style="display:none; margin-top:10px; color:#3498db;">🔍 Buscando información...</p>
+
+                <div id="resultado" class="result-box">
+                    <h3 style="margin: 0 0 10px 0; color: #2c3e50;">Orden #<span id="resOrden"></span></h3>
+                    <div style="margin-bottom: 10px;"><strong>Equipo:</strong> <span id="resEquipo"></span></div>
+                    <div style="margin-bottom: 10px;"><strong>Fecha Entrada:</strong> <span id="resFecha"></span></div>
+                    <div style="margin-bottom: 15px;">
+                        <strong>Diagnóstico Técnico:</strong> <br>
+                        <span id="resDiagnostico" style="color: #555; font-style: italic;"></span>
+                    </div>
+                    <div style="border-top: 1px solid #ddd; padding-top: 15px;">
+                        Estatus Actual: <span id="resEstatus" class="status-badge"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <img src="https://raw.githubusercontent.com/r0g3rca/rma_firstsystem/main/imagenes/imagen%202.png" alt="Publicidad Derecha" class="side-banner">
+    </div>
+
+    <footer>
+        &copy; 2025 Sistema de Gestión RMA - Consulta de Clientes
+    </footer>
+
+    <script>
+        const URL_SCRIPT = "https://script.google.com/macros/s/AKfycbwD-Rv-JtRXH4ihnX4SdV3WWqmP3SADNNdQvU2Y_PxwEtMZfCgA7tD48vqvITzSFMNL/exec";
+
+        function buscarOrden() {
+            const input = document.getElementById('txtBuscar').value;
+            const loading = document.getElementById('loading');
+            const resBox = document.getElementById('resultado');
+            const btn = document.getElementById('btnBuscar');
+
+            if(!input) return alert("Por favor ingrese un número de orden o serial");
+
+            loading.style.display = 'block';
+            resBox.style.display = 'none';
+            btn.disabled = true;
+            btn.innerText = "Buscando...";
+
+            fetch(URL_SCRIPT + "?accion=consultar&dato=" + encodeURIComponent(input))
+            .then(r => r.json())
+            .then(data => {
+                loading.style.display = 'none';
+                btn.disabled = false;
+                btn.innerText = "Consultar Estatus";
+                
+                if(data.estado === "ok") {
+                    document.getElementById('resOrden').innerText = data.orden;
+                    document.getElementById('resEquipo').innerText = data.descripcion;
+                    let f = new Date(data.fecha_recepcion);
+                    document.getElementById('resFecha').innerText = f.toLocaleDateString();
+                    document.getElementById('resDiagnostico').innerText = data.tecnico_reporte || "En espera de revisión...";
+                    
+                    const badge = document.getElementById('resEstatus');
+                    badge.innerText = data.estatus;
+                    
+                    if(data.estatus === "LISTO" || data.estatus === "ENTREGADO") {
+                        badge.style.background = "#27ae60"; 
+                    } else if(data.estatus === "PENDIENTE") {
+                        badge.style.background = "#f39c12"; 
+                    } else {
+                        badge.style.background = "#2980b9"; 
+                    }
+                    resBox.style.display = 'block';
+                } else {
+                    alert("No se encontró ninguna orden con ese dato.");
+                }
+            })
+            .catch(e => {
+                loading.style.display = 'none';
+                btn.disabled = false;
+                btn.innerText = "Consultar Estatus";
+                alert("Error de conexión. Intente más tarde.");
+            });
+        }
+    </script>
+</body>
+</html>
