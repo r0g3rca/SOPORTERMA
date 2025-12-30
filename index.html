@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registro RMA</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
     <style>
         body { 
             font-family: 'Segoe UI', sans-serif; 
@@ -70,33 +72,82 @@
         input, select, textarea { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; }
         input:focus, select:focus, textarea:focus { border-color: #3498db; outline: none; }
 
-        /* BOTÓN */
+        /* BOTÓN GUARDAR */
         .btn-save { background-color: #27ae60; color: white; width: 100%; padding: 15px; border: none; border-radius: 5px; font-size: 18px; font-weight: bold; cursor: pointer; margin-top: 20px; }
         .btn-save:hover { background-color: #2ecc71; }
         .btn-save:disabled { background-color: #bdc3c7; }
 
-        /* FOOTER */
+        /* --- FOOTER MODERNO --- */
         footer {
             background-color: #2c3e50;
             color: white;
             text-align: center;
-            padding: 15px;
+            padding: 20px;
             font-size: 0.9rem;
             margin-top: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
         }
         
-        /* Enlace discreto para técnicos en el footer */
-        footer a.tech-link {
-            color: #bdc3c7;
+        .social-icons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 5px;
+        }
+
+        .social-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 15px;
+            border-radius: 20px;
             text-decoration: none;
-            margin-left: 15px;
-            font-size: 0.8rem;
-            opacity: 0.7;
+            color: white;
+            font-weight: bold;
+            font-size: 0.9rem;
             transition: 0.3s;
         }
-        footer a.tech-link:hover { color: #fff; opacity: 1; text-decoration: underline; }
 
-        /* RESPONSIVE: MÓVIL Y TABLET */
+        .tiktok { background-color: #000000; border: 1px solid #333; }
+        .tiktok:hover { background-color: #252525; }
+
+        .instagram { background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); }
+        .instagram:hover { opacity: 0.9; }
+
+        .tech-link {
+            color: #7f8c8d;
+            text-decoration: none;
+            font-size: 1.2rem;
+            margin-top: 5px;
+            transition: 0.3s;
+        }
+        .tech-link:hover { color: #fff; }
+
+        /* --- BOTÓN FLOTANTE WHATSAPP --- */
+        .float-wa {
+            position: fixed;
+            width: 60px;
+            height: 60px;
+            bottom: 25px;
+            right: 25px;
+            background-color: #25d366;
+            color: #FFF;
+            border-radius: 50px;
+            text-align: center;
+            font-size: 30px;
+            box-shadow: 2px 2px 3px #999;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            transition: 0.3s;
+        }
+        .float-wa:hover { background-color: #20ba5a; transform: scale(1.1); }
+
+        /* RESPONSIVE */
         @media (max-width: 1100px) {
             .side-banner { display: none; } 
             .main-wrapper { padding: 10px; }
@@ -115,7 +166,7 @@
     </div>
 
     <div class="main-wrapper">
-        <img src="https://raw.githubusercontent.com/r0g3rca/rma_firstsystem/main/imagenes/imagen%201.png" alt="Publicidad Izquierda" class="side-banner">
+        <img src="https://raw.githubusercontent.com/r0g3rca/rma_firstsystem/main/imagenes/1.jpg" alt="Publicidad Izquierda" class="side-banner">
 
         <div class="form-container">
             <img src="https://raw.githubusercontent.com/r0g3rca/rma_firstsystem/main/Header.png" alt="Encabezado" class="form-header-img">
@@ -198,5 +249,58 @@
             </div>
         </div>
 
-        <img src="https://raw.githubusercontent.com/r0g3rca/rma_firstsystem/main/imagenes/imagen%202.png" alt="Publicidad Derecha" class="side-banner">
+        <img src="https://raw.githubusercontent.com/r0g3rca/rma_firstsystem/main/imagenes/2.jpg" alt="Publicidad Derecha" class="side-banner">
     </div>
+
+    <a href="https://wa.me/584120000000" class="float-wa" target="_blank">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+
+    <footer>
+        <div class="social-icons">
+            <a href="https://tiktok.com/" target="_blank" class="social-btn tiktok">
+                <i class="fab fa-tiktok"></i> TikTok
+            </a>
+            <a href="https://instagram.com/" target="_blank" class="social-btn instagram">
+                <i class="fab fa-instagram"></i> Instagram
+            </a>
+        </div>
+        
+        <div>&copy; 2025 Sistema de Gestión RMA - Todos los derechos reservados.</div>
+        
+        <a href="tecnico.html" class="tech-link" title="Acceso Técnicos">
+            <i class="fas fa-lock"></i>
+        </a>
+    </footer>
+
+    <script>
+        // URL ACTUALIZADA DEL SCRIPT (VERSIÓN EDITAR/GUARDAR)
+        const URL_SCRIPT = "https://script.google.com/macros/s/AKfycbxFIfG13unVkkXwc_fiAwVfPtAAiLzWj4KEXosKiVH9TJIxf_vwKN61sChmK-Ue9-NXNg/exec";
+
+        const form = document.getElementById('formRMA');
+        form.addEventListener('submit', e => {
+            e.preventDefault();
+            const btn = document.getElementById('btnGuardar');
+            const msg = document.getElementById('mensajeRegistro');
+            
+            if (form.vendedor.value === "") { alert("Seleccione un vendedor"); return; }
+
+            btn.disabled = true;
+            btn.innerText = "Guardando...";
+            msg.innerText = "";
+
+            const formData = new FormData(form);
+            fetch(URL_SCRIPT, { method: 'POST', body: formData })
+            .then(r => r.text())
+            .then(data => {
+                msg.innerText = "¡Guardado con Éxito!";
+                msg.style.color = "green";
+                form.reset();
+                form.vendedor.value = "";
+            })
+            .catch(e => { msg.innerText = "Error de conexión"; msg.style.color = "red"; })
+            .finally(() => { btn.disabled = false; btn.innerText = "Guardar Orden"; });
+        });
+    </script>
+</body>
+</html>
