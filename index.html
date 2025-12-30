@@ -3,334 +3,225 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistema de Gestión RMA</title>
+    <title>Registro RMA</title>
     <style>
-        :root {
-            --primary-color: #2c3e50;
-            --secondary-color: #27ae60;
-            --accent-color: #3498db;
-            --bg-color: #f4f7f6;
-        }
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg-color);
-            margin: 0;
-            padding: 20px;
-            color: #333;
-        }
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-        h1 { text-align: center; color: var(--primary-color); }
-        
-        /* Pestañas de Navegación */
-        .tabs {
+        body { 
+            font-family: 'Segoe UI', sans-serif; 
+            background-color: #f4f7f6; 
+            margin: 0; 
+            padding: 0; 
             display: flex;
-            margin-bottom: 20px;
-            border-bottom: 2px solid #ddd;
+            flex-direction: column;
+            min-height: 100vh;
         }
-        .tab-btn {
-            flex: 1;
-            padding: 15px;
-            border: none;
-            background: none;
-            cursor: pointer;
-            font-size: 16px;
-            font-weight: bold;
-            color: #777;
-            transition: 0.3s;
-        }
-        .tab-btn.active {
-            color: var(--accent-color);
-            border-bottom: 3px solid var(--accent-color);
-        }
-        .tab-content { display: none; animation: fadeIn 0.5s; }
-        .tab-content.active { display: block; }
+        
+        /* NAVBAR SUPERIOR */
+        .navbar { background: #2c3e50; padding: 10px 20px; text-align: right; }
+        .navbar a { color: white; text-decoration: none; font-weight: bold; background: #34495e; padding: 8px 15px; border-radius: 4px; font-size: 0.9rem;}
+        .navbar a:hover { background: #1abc9c; }
 
-        /* Formularios */
-        .form-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
+        /* LAYOUT PRINCIPAL (3 COLUMNAS) */
+        .main-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 20px;
+            padding: 20px;
+            flex: 1; /* Empuja el footer hacia abajo */
         }
+
+        /* IMÁGENES LATERALES */
+        .side-banner {
+            width: 300px; /* Tamaño solicitado */
+            height: auto;
+            max-height: 600px;
+            object-fit: cover;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        /* CONTENEDOR CENTRAL (FORMULARIO) */
+        .form-container { 
+            flex: 1;
+            max-width: 800px; 
+            background: white; 
+            border-radius: 8px; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1); 
+            overflow: hidden; /* Para que el header no se salga */
+        }
+
+        /* HEADER DEL FORMULARIO */
+        .form-header-img {
+            width: 100%;
+            height: auto;
+            display: block;
+            max-height: 200px; /* Limite de altura para que no ocupe toda la pantalla */
+            object-fit: cover;
+        }
+
+        .form-content { padding: 30px; }
+        h1 { text-align: center; color: #2c3e50; margin-top: 0; }
+
+        /* GRID DEL FORMULARIO */
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
         .full-width { grid-column: span 2; }
         
-        label { display: block; margin-bottom: 5px; font-weight: 600; font-size: 0.9em; }
-        
-        /* Estilos Inputs y Selects */
-        input, select, textarea {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            box-sizing: border-box;
-            font-size: 14px;
-            background-color: #fff;
-        }
-        
-        /* Validación visual */
-        input:focus, select:focus, textarea:focus {
-            outline: none;
-            border-color: var(--accent-color);
-            box-shadow: 0 0 5px rgba(52, 152, 219, 0.3);
-        }
+        label { display: block; margin-bottom: 5px; font-weight: bold; color: #555; font-size: 0.9rem; }
+        input, select, textarea { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; }
+        input:focus, select:focus, textarea:focus { border-color: #3498db; outline: none; }
 
-        button {
-            background-color: var(--secondary-color);
+        /* BOTÓN */
+        .btn-save { background-color: #27ae60; color: white; width: 100%; padding: 15px; border: none; border-radius: 5px; font-size: 18px; font-weight: bold; cursor: pointer; margin-top: 20px; }
+        .btn-save:hover { background-color: #2ecc71; }
+        .btn-save:disabled { background-color: #bdc3c7; }
+
+        /* FOOTER */
+        footer {
+            background-color: #2c3e50;
             color: white;
-            padding: 12px 20px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 16px;
-            width: 100%;
-            margin-top: 10px;
-        }
-        button:hover { opacity: 0.9; }
-        button:disabled { background-color: #ccc; }
-
-        /* Estilos de Búsqueda */
-        .search-box {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-        .result-card {
-            background: #e8f6f3;
-            border: 1px solid #d4efdf;
-            padding: 20px;
-            border-radius: 8px;
-            display: none;
-        }
-        .status-badge {
-            background: var(--accent-color);
-            color: white;
-            padding: 5px 10px;
-            border-radius: 15px;
-            font-size: 0.9em;
+            text-align: center;
+            padding: 15px;
+            font-size: 0.9rem;
+            margin-top: auto;
         }
 
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
+        /* RESPONSIVE: MÓVIL Y TABLET */
+        @media (max-width: 1100px) {
+            .side-banner { display: none; } /* Oculta laterales en pantallas medianas/pequeñas */
+            .main-wrapper { padding: 10px; }
+        }
         @media (max-width: 600px) {
             .form-grid { grid-template-columns: 1fr; }
             .full-width { grid-column: span 1; }
+            .form-content { padding: 15px; }
         }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <h1>Control de Servicio Técnico (RMA)</h1>
-
-    <div class="tabs">
-        <button class="tab-btn active" onclick="openTab('registro')">Registrar Orden</button>
-        <button class="tab-btn" onclick="openTab('consulta')">Consultar Estatus</button>
+    <div class="navbar">
+        <a href="consulta.html">Ir a Consultar Estatus &rarr;</a>
     </div>
 
-    <div id="registro" class="tab-content active">
-        <form id="formRMA">
-            <div class="form-grid">
-                <div>
-                    <label>N° Orden (Solo números):</label>
-                    <input type="number" name="orden" required placeholder="Ej: 1001" min="1">
-                </div>
-                <div>
-                    <label>Fecha Recepción:</label>
-                    <input type="text" value="HOY" disabled style="background: #eee; cursor: not-allowed;">
-                </div>
-                
-                <div>
-                    <label>Vendedor/Receptor:</label>
-                    <select name="vendedor" required>
-                        <option value="" disabled selected>-- Seleccione un Vendedor --</option>
-                        <option value="MAYRA">MAYRA</option>
-                        <option value="HAROLD">HAROLD</option>
-                        <option value="VICTOR">VICTOR</option>
-                        <option value="MAILIN">MAILIN</option>
-                        <option value="VENDEDOR 5">VENDEDOR 5</option>
-                        <option value="VENDEDOR 6">VENDEDOR 6</option>
-                        <option value="VENDEDOR 7">VENDEDOR 7</option>
-                    </select>
-                </div>
-                <div>
-                    <label>N° Control:</label>
-                    <input type="text" name="control">
-                </div>
-                <div>
-                    <label>Código Artículo:</label>
-                    <input type="text" name="codigo">
-                </div>
-                <div>
-                    <label>Serial:</label>
-                    <input type="text" name="serial" required>
-                </div>
-                <div class="full-width">
-                    <label>Descripción del Equipo:</label>
-                    <input type="text" name="descripcion" placeholder="Marca, Modelo, Color..." required>
-                </div>
-                <div>
-                    <label>Procedencia:</label>
-                    <input type="text" name="procedencia">
-                </div>
-                <div>
-                    <label>Accesorios:</label>
-                    <input type="text" name="accesorios" placeholder="Cargador, bolso...">
-                </div>
-                <div class="full-width">
-                    <label>Falla Reportada:</label>
-                    <textarea name="falla" rows="3" required placeholder="Describa el problema detalladamente..."></textarea>
-                </div>
-                
-                <div class="full-width" style="border-top: 1px solid #eee; margin-top: 10px; padding-top: 10px;">
-                    <strong>Datos del Cliente</strong>
-                </div>
-                <div>
-                    <label>Nombre Cliente:</label>
-                    <input type="text" name="recepcion">
-                </div>
-                <div>
-                    <label>Teléfono:</label>
-                    <input type="tel" name="telefono" placeholder="Ej: 0414-1234567">
-                </div>
-                <div class="full-width">
-                    <label>Correo Electrónico:</label>
-                    <input type="email" name="email" placeholder="cliente@ejemplo.com">
-                </div>
+    <div class="main-wrapper">
+        <img src="https://raw.githubusercontent.com/r0g3rca/rma_firstsystem/main/imagenes/imagen%201.png" alt="Publicidad Izquierda" class="side-banner">
+
+        <div class="form-container">
+            <img src="https://raw.githubusercontent.com/r0g3rca/rma_firstsystem/main/imagenes/header.png" alt="Encabezado" class="form-header-img">
+            
+            <div class="form-content">
+                <h1>Nueva Orden de Servicio</h1>
+                <form id="formRMA">
+                    <div class="form-grid">
+                        <div>
+                            <label>N° Orden:</label>
+                            <input type="number" name="orden" required placeholder="Ej: 1001" min="1">
+                        </div>
+                        <div>
+                            <label>Fecha Recepción:</label>
+                            <input type="text" value="HOY" disabled style="background: #eee;">
+                        </div>
+                        
+                        <div>
+                            <label>Vendedor/Receptor:</label>
+                            <select name="vendedor" required>
+                                <option value="" disabled selected>-- Seleccione --</option>
+                                <option value="MAYRA">MAYRA</option>
+                                <option value="HAROLD">HAROLD</option>
+                                <option value="VICTOR">VICTOR</option>
+                                <option value="MAILIN">MAILIN</option>
+                                <option value="VENDEDOR 5">VENDEDOR 5</option>
+                                <option value="VENDEDOR 6">VENDEDOR 6</option>
+                                <option value="VENDEDOR 7">VENDEDOR 7</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label>N° Control:</label>
+                            <input type="text" name="control">
+                        </div>
+                        <div>
+                            <label>Código Artículo:</label>
+                            <input type="text" name="codigo">
+                        </div>
+                        <div>
+                            <label>Serial:</label>
+                            <input type="text" name="serial" required>
+                        </div>
+                        <div class="full-width">
+                            <label>Descripción del Equipo:</label>
+                            <input type="text" name="descripcion" placeholder="Marca, Modelo, Color..." required>
+                        </div>
+                        <div>
+                            <label>Procedencia:</label>
+                            <input type="text" name="procedencia">
+                        </div>
+                        <div>
+                            <label>Accesorios:</label>
+                            <input type="text" name="accesorios">
+                        </div>
+                        <div class="full-width">
+                            <label>Falla Reportada:</label>
+                            <textarea name="falla" rows="3" required placeholder="Describa el problema..."></textarea>
+                        </div>
+                        
+                        <div class="full-width" style="border-top: 1px solid #eee; margin-top: 10px; padding-top: 10px;">
+                            <strong style="color:#2c3e50;">Datos del Cliente</strong>
+                        </div>
+                        <div>
+                            <label>Nombre Cliente:</label>
+                            <input type="text" name="recepcion">
+                        </div>
+                        <div>
+                            <label>Teléfono:</label>
+                            <input type="tel" name="telefono">
+                        </div>
+                        <div class="full-width">
+                            <label>Correo Electrónico:</label>
+                            <input type="email" name="email">
+                        </div>
+                    </div>
+                    <button type="submit" id="btnGuardar" class="btn-save">Guardar Orden</button>
+                </form>
+                <p id="mensajeRegistro" style="text-align: center; font-weight: bold; margin-top:10px;"></p>
             </div>
-            <button type="submit" id="btnGuardar">Guardar Orden</button>
-        </form>
-        <p id="mensajeRegistro" style="text-align: center; margin-top: 10px; font-weight: bold;"></p>
+        </div>
+
+        <img src="https://raw.githubusercontent.com/r0g3rca/rma_firstsystem/main/imagenes/imagen%202.png" alt="Publicidad Derecha" class="side-banner">
     </div>
 
-    <div id="consulta" class="tab-content">
-        <div class="search-box">
-            <input type="text" id="txtBuscar" placeholder="Ingrese N° Orden, Serial o Control">
-            <button onclick="buscarOrden()" style="width: auto; margin: 0;">Buscar</button>
-        </div>
-        <p id="loading" style="display:none; text-align:center;">Buscando...</p>
+    <footer>
+        &copy; 2025 Sistema de Gestión RMA - Todos los derechos reservados.
+    </footer>
 
-        <div id="resultado" class="result-card">
-            <h3 style="margin-top:0;">Detalles de la Orden: <span id="resOrden"></span></h3>
-            <p><strong>Equipo:</strong> <span id="resEquipo"></span></p>
-            <p><strong>Fecha Entrada:</strong> <span id="resFecha"></span></p>
-            <p><strong>Diagnóstico Técnico:</strong> <span id="resDiagnostico"></span></p>
-            <hr>
-            <p style="font-size: 1.2em;">Estatus Actual: <span id="resEstatus" class="status-badge"></span></p>
-        </div>
-    </div>
-</div>
+    <script>
+        // URL DE TU SCRIPT
+        const URL_SCRIPT = "https://script.google.com/macros/s/AKfycbwD-Rv-JtRXH4ihnX4SdV3WWqmP3SADNNdQvU2Y_PxwEtMZfCgA7tD48vqvITzSFMNL/exec";
 
-<script>
-    // URL DE TU SCRIPT DE GOOGLE APPS SCRIPT
-    const URL_SCRIPT = "https://script.google.com/macros/s/AKfycbwD-Rv-JtRXH4ihnX4SdV3WWqmP3SADNNdQvU2Y_PxwEtMZfCgA7tD48vqvITzSFMNL/exec";
+        const form = document.getElementById('formRMA');
+        form.addEventListener('submit', e => {
+            e.preventDefault();
+            const btn = document.getElementById('btnGuardar');
+            const msg = document.getElementById('mensajeRegistro');
+            
+            if (form.vendedor.value === "") { alert("Seleccione un vendedor"); return; }
 
-    // --- FUNCIÓN 1: REGISTRAR (POST) ---
-    const form = document.getElementById('formRMA');
-    form.addEventListener('submit', e => {
-        e.preventDefault();
-        const btn = document.getElementById('btnGuardar');
-        const msg = document.getElementById('mensajeRegistro');
-        
-        // Validación extra simple antes de enviar
-        const vendedor = form.vendedor.value;
-        if (vendedor === "") {
-            alert("Por favor seleccione un vendedor de la lista.");
-            return;
-        }
+            btn.disabled = true;
+            btn.innerText = "Guardando...";
+            msg.innerText = "";
 
-        btn.disabled = true;
-        btn.innerText = "Guardando...";
-        msg.innerText = "";
-
-        const formData = new FormData(form);
-        
-        fetch(URL_SCRIPT, {
-            method: 'POST',
-            body: formData
-        })
-        .then(response => response.text())
-        .then(data => {
-            msg.innerText = "¡Orden guardada exitosamente!";
-            msg.style.color = "green";
-            form.reset();
-            // Resetear el select manualmente al valor por defecto
-            form.vendedor.value = "";
-        })
-        .catch(error => {
-            msg.innerText = "Error al guardar. Intente nuevamente.";
-            msg.style.color = "red";
-            console.error('Error:', error);
-        })
-        .finally(() => {
-            btn.disabled = false;
-            btn.innerText = "Guardar Orden";
+            const formData = new FormData(form);
+            fetch(URL_SCRIPT, { method: 'POST', body: formData })
+            .then(r => r.text())
+            .then(data => {
+                msg.innerText = "¡Guardado con Éxito!";
+                msg.style.color = "green";
+                form.reset();
+                form.vendedor.value = "";
+            })
+            .catch(e => { msg.innerText = "Error de conexión"; msg.style.color = "red"; })
+            .finally(() => { btn.disabled = false; btn.innerText = "Guardar Orden"; });
         });
-    });
-
-    // --- FUNCIÓN 2: CONSULTAR (GET) ---
-    function buscarOrden() {
-        const input = document.getElementById('txtBuscar').value;
-        const loading = document.getElementById('loading');
-        const resultadoDiv = document.getElementById('resultado');
-
-        if(!input) return alert("Escribe un número de orden o serial");
-
-        loading.style.display = 'block';
-        resultadoDiv.style.display = 'none';
-
-        const urlConsulta = URL_SCRIPT + "?accion=consultar&dato=" + encodeURIComponent(input);
-
-        fetch(urlConsulta)
-        .then(response => response.json())
-        .then(data => {
-            loading.style.display = 'none';
-            if(data.estado === "ok") {
-                document.getElementById('resOrden').innerText = data.orden;
-                document.getElementById('resEquipo').innerText = data.descripcion;
-                
-                let fecha = new Date(data.fecha_recepcion);
-                document.getElementById('resFecha').innerText = fecha.toLocaleDateString();
-                
-                document.getElementById('resDiagnostico').innerText = data.tecnico_reporte || "Sin diagnóstico aún";
-                document.getElementById('resEstatus').innerText = data.estatus;
-                
-                const badge = document.getElementById('resEstatus');
-                if(data.estatus === "LISTO" || data.estatus === "ENTREGADO") badge.style.background = "#27ae60"; 
-                else if(data.estatus === "PENDIENTE") badge.style.background = "#e67e22"; 
-                else badge.style.background = "#3498db"; 
-
-                resultadoDiv.style.display = 'block';
-            } else {
-                alert("No se encontró ninguna orden con ese dato.");
-            }
-        })
-        .catch(error => {
-            loading.style.display = 'none';
-            alert("Error de conexión al buscar.");
-        });
-    }
-
-    // --- UTILIDAD: PESTAÑAS ---
-    function openTab(tabName) {
-        var i, x, tablinks;
-        x = document.getElementsByClassName("tab-content");
-        for (i = 0; i < x.length; i++) {
-            x[i].style.display = "none";
-        }
-        tablinks = document.getElementsByClassName("tab-btn");
-        for (i = 0; i < x.length; i++) {
-            tablinks[i].className = tablinks[i].className.replace(" active", "");
-        }
-        document.getElementById(tabName).style.display = "block";
-        event.currentTarget.className += " active";
-    }
-</script>
-
+    </script>
 </body>
 </html>
