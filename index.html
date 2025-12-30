@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registro RMA</title>
+    <title>Registro RMA - Soporte CRJ</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <style>
@@ -40,7 +40,6 @@
         .form-content { padding: 30px; }
         h1 { text-align: center; color: #2c3e50; margin-top: 0; }
 
-        /* GRID DEL FORMULARIO */
         .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
         .full-width { grid-column: span 2; }
         
@@ -50,47 +49,52 @@
         }
         input:focus, select:focus, textarea:focus { border-color: #3498db; outline: none; }
 
-        /* --- ESTILOS NUEVOS PARA LOS CHECKBOXES --- */
+        /* Estilo Checkboxes */
         .checkbox-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
-            background-color: #f8f9fa;
-            padding: 15px;
-            border: 1px solid #e9ecef;
-            border-radius: 5px;
+            display: flex; flex-wrap: wrap; gap: 15px; background-color: #f8f9fa;
+            padding: 15px; border: 1px solid #e9ecef; border-radius: 5px;
         }
-        .checkbox-item {
-            display: flex;
-            align-items: center;
-            font-weight: normal; /* Quita la negrita de los items */
-            cursor: pointer;
-            font-size: 0.9rem;
+        .checkbox-item { display: flex; align-items: center; font-weight: normal; cursor: pointer; font-size: 0.9rem; }
+        .checkbox-item input { margin-right: 8px; width: 18px; height: 18px; cursor: pointer; }
+
+        /* Aviso de Costo */
+        #avisoCosto {
+            background-color: #fdf2e9; border-left: 5px solid #e67e22; color: #d35400;
+            padding: 10px; margin-top: 5px; font-size: 0.9rem; border-radius: 4px;
+            display: none; animation: fadeIn 0.5s;
         }
-        .checkbox-item input {
-            margin-right: 8px;
-            width: 18px;
-            height: 18px;
-            cursor: pointer;
-        }
-        /* ----------------------------------------- */
 
         .btn-save { background-color: #27ae60; color: white; width: 100%; padding: 15px; border: none; border-radius: 5px; font-size: 18px; font-weight: bold; cursor: pointer; margin-top: 20px; }
         .btn-save:hover { background-color: #2ecc71; }
         .btn-save:disabled { background-color: #bdc3c7; }
 
+        /* --- FOOTER --- */
         footer {
-            background-color: #2c3e50; color: white; text-align: center; padding: 20px;
-            font-size: 0.9rem; margin-top: auto; display: flex; flex-direction: column; gap: 10px;
+            background-color: #2c3e50; color: white; text-align: center; padding: 25px 20px;
+            font-size: 0.9rem; margin-top: auto; display: flex; flex-direction: column; gap: 15px;
         }
         
-        .social-icons { display: flex; justify-content: center; gap: 15px; margin-bottom: 5px; }
-        .social-btn { display: flex; align-items: center; gap: 8px; padding: 8px 15px; border-radius: 20px; text-decoration: none; color: white; font-weight: bold; font-size: 0.9rem; transition: 0.3s; }
+        .social-icons { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
+        
+        .social-btn { 
+            display: flex; align-items: center; gap: 8px; padding: 8px 15px; border-radius: 20px; 
+            text-decoration: none; color: white; font-weight: bold; font-size: 0.9rem; transition: 0.3s; 
+        }
+
+        /* Colores de Redes */
         .tiktok { background-color: #000000; border: 1px solid #333; }
         .instagram { background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); }
+        .facebook { background-color: #1877F2; }
+        .youtube { background-color: #FF0000; }
+        
+        .social-btn:hover { opacity: 0.9; transform: translateY(-2px); }
+
+        .copyright-text { font-size: 0.85rem; opacity: 0.8; margin-top: 5px; }
+
         .tech-link { color: #7f8c8d; text-decoration: none; font-size: 1.2rem; margin-top: 5px; transition: 0.3s; }
         .tech-link:hover { color: #fff; }
 
+        /* Botón Flotante WhatsApp */
         .float-wa {
             position: fixed; width: 60px; height: 60px; bottom: 25px; right: 25px;
             background-color: #25d366; color: #FFF; border-radius: 50px; text-align: center; font-size: 30px;
@@ -98,6 +102,8 @@
             text-decoration: none; transition: 0.3s;
         }
         .float-wa:hover { background-color: #20ba5a; transform: scale(1.1); }
+        
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
         @media (max-width: 1100px) { .side-banner { display: none; } .main-wrapper { padding: 10px; } }
         @media (max-width: 600px) { .form-grid { grid-template-columns: 1fr; } .full-width { grid-column: span 1; } .form-content { padding: 15px; } }
@@ -158,9 +164,17 @@
                             <label>Descripción del Equipo:</label>
                             <input type="text" name="descripcion" placeholder="Marca, Modelo, Color..." required>
                         </div>
+                        
                         <div>
                             <label>Procedencia:</label>
-                            <input type="text" name="procedencia">
+                            <select name="procedencia" id="selProcedencia" required onchange="verificarCosto()">
+                                <option value="" disabled selected>-- Seleccione --</option>
+                                <option value="Garantía">Garantía</option>
+                                <option value="Servicio técnico">Servicio técnico</option>
+                            </select>
+                            <div id="avisoCosto">
+                                <i class="fas fa-exclamation-circle"></i> <strong>Nota:</strong> Este servicio tiene un costo asociado.
+                            </div>
                         </div>
 
                         <div class="full-width">
@@ -174,6 +188,7 @@
                             </div>
                             <input type="text" id="accOtros" placeholder="Otros accesorios (Especifique aquí)..." style="margin-top: 10px;">
                         </div>
+
                         <div class="full-width">
                             <label>Falla Reportada:</label>
                             <textarea name="falla" rows="3" required placeholder="Describa el problema..."></textarea>
@@ -204,21 +219,29 @@
         <img src="https://raw.githubusercontent.com/r0g3rca/rma_firstsystem/main/imagenes/2.png" alt="Publicidad Derecha" class="side-banner">
     </div>
 
-    <a href="https://wa.me/584129020243" class="float-wa" target="_blank">
+    <a href="https://wa.me/584129020243?text=quiero%20un%20servicio%20tecnico%20me%20podrias%20brindar%20mas%20informacion" class="float-wa" target="_blank">
         <i class="fab fa-whatsapp"></i>
     </a>
 
     <footer>
         <div class="social-icons">
-            <a href="https://tiktok.com/" target="_blank" class="social-btn tiktok">
+            <a href="https://www.tiktok.com/@soportecrj" target="_blank" class="social-btn tiktok">
                 <i class="fab fa-tiktok"></i> TikTok
             </a>
-            <a href="https://instagram.com/" target="_blank" class="social-btn instagram">
+            <a href="https://www.instagram.com/soportecrj/" target="_blank" class="social-btn instagram">
                 <i class="fab fa-instagram"></i> Instagram
+            </a>
+            <a href="https://www.facebook.com/ventascrj" target="_blank" class="social-btn facebook">
+                <i class="fab fa-facebook"></i> Facebook
+            </a>
+            <a href="https://www.youtube.com/@soportecrj" target="_blank" class="social-btn youtube">
+                <i class="fab fa-youtube"></i> YouTube
             </a>
         </div>
         
-        <div>&copy; 2025 Sistema de Gestión RMA - Todos los derechos reservados.</div>
+        <div class="copyright-text">
+            &copy; 2025 SOPORTE CRJ, C.A. J407133640 - Todos los derechos reservados.
+        </div>
         
         <a href="tecnico.html" class="tech-link" title="Acceso Técnicos">
             <i class="fas fa-lock"></i>
@@ -226,59 +249,42 @@
     </footer>
 
     <script>
-        // URL DE TU SCRIPT ACTUAL
         const URL_SCRIPT = "https://script.google.com/macros/s/AKfycbw21831tWm9MtbRzS_Wbz7VcCkXHymbH0aWbamtR8nI4c-xzcI3dM0rZrHMRmrx4l_xoA/exec";
 
+        function verificarCosto() {
+            const select = document.getElementById('selProcedencia');
+            const aviso = document.getElementById('avisoCosto');
+            if (select.value === "Servicio técnico") {
+                aviso.style.display = 'block';
+            } else {
+                aviso.style.display = 'none';
+            }
+        }
+
         const form = document.getElementById('formRMA');
-        
         form.addEventListener('submit', e => {
             e.preventDefault();
             const btn = document.getElementById('btnGuardar');
             const msg = document.getElementById('mensajeRegistro');
             
             if (form.vendedor.value === "") { alert("Seleccione un vendedor"); return; }
+            if (form.procedencia.value === "") { alert("Seleccione la procedencia"); return; }
 
-            // --- LÓGICA NUEVA PARA UNIR LOS CHECKBOXES ---
-            // 1. Buscamos todos los marcados
             const marcados = document.querySelectorAll('.acc-check:checked');
             let listaAccesorios = [];
-            
-            // 2. Los agregamos a una lista
             marcados.forEach(c => listaAccesorios.push(c.value));
-            
-            // 3. Revisamos si escribió algo en "Otros"
             const otros = document.getElementById('accOtros').value.trim();
-            if(otros) {
-                listaAccesorios.push(otros);
-            }
-            
-            // 4. Creamos el texto final (Ej: "Cargador, Caja, Funda roja")
+            if(otros) listaAccesorios.push(otros);
             const textoFinalAccesorios = listaAccesorios.join(", ");
-            // ---------------------------------------------
 
             btn.disabled = true;
             btn.innerText = "Guardando...";
             msg.innerText = "";
 
-            // Creamos el paquete de datos
             const formData = new FormData(form);
-            
-            // ¡IMPORTANTE! Agregamos manualmente el texto combinado de accesorios
             formData.append('accesorios', textoFinalAccesorios);
 
             fetch(URL_SCRIPT, { method: 'POST', body: formData })
             .then(r => r.text())
             .then(data => {
                 msg.innerText = "¡Guardado con Éxito!";
-                msg.style.color = "green";
-                form.reset();
-                form.vendedor.value = "";
-                // Limpiar checkboxes manuales si es necesario (el reset lo hace, pero por seguridad)
-                document.querySelectorAll('.acc-check').forEach(c => c.checked = false);
-            })
-            .catch(e => { msg.innerText = "Error de conexión"; msg.style.color = "red"; })
-            .finally(() => { btn.disabled = false; btn.innerText = "Guardar Orden"; });
-        });
-    </script>
-</body>
-</html>
