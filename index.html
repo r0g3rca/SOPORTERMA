@@ -220,4 +220,228 @@
                                 <label class="checkbox-item"><input type="checkbox" class="acc-check normal-check" value="Cargador"> Cargador</label>
                                 <label class="checkbox-item"><input type="checkbox" class="acc-check normal-check" value="Caja"> Caja</label>
                                 <label class="checkbox-item"><input type="checkbox" class="acc-check normal-check" value="Animes"> Animes</label>
-                                <label class="checkbox-item"><input type="checkbox"
+                                <label class="checkbox-item"><input type="checkbox" class="acc-check normal-check" value="Manuales"> Manuales</label>
+                                <label class="checkbox-item"><input type="checkbox" class="acc-check normal-check" value="Bolsas Originales"> Bolsas Originales</label>
+                            </div>
+                            <input type="text" id="accOtros" placeholder="Otros accesorios (Especifique aquí)..." style="margin-top: 10px;">
+                        </div>
+
+                        <div class="full-width">
+                            <label>Falla reportada:</label>
+                            <textarea name="falla" id="inpFalla" rows="3" required placeholder="Describa el problema..."></textarea>
+                        </div>
+                        
+                        <div class="full-width" style="border-top: 1px solid #eee; margin-top: 10px; padding-top: 10px;">
+                            <strong style="color:#2c3e50;">Datos del cliente</strong>
+                        </div>
+                        <div>
+                            <label>Nombre del cliente:</label>
+                            <input type="text" id="inpCliente" name="recepcion" required>
+                        </div>
+                        <div>
+                            <label>Teléfono:</label>
+                            <input type="tel" id="inpTelefono" name="telefono" required>
+                        </div>
+                        <div class="full-width">
+                            <label>Correo electrónico:</label>
+                            <input type="email" name="email">
+                        </div>
+                    </div>
+
+                    <div class="btn-group">
+                        <button type="submit" id="btnGuardar" class="btn-save">Guardar orden</button>
+                        <button type="button" onclick="imprimirRecibo()" class="btn-print">
+                            <i class="fas fa-print"></i> Generar Recibo / PDF
+                        </button>
+                    </div>
+
+                </form>
+                <p id="mensajeRegistro" style="text-align: center; font-weight: bold; margin-top:10px;"></p>
+            </div>
+        </div>
+
+        <img src="https://raw.githubusercontent.com/r0g3rca/rma_firstsystem/main/imagenes/2.png" alt="Publicidad Derecha" class="side-banner">
+    </div>
+
+    <a href="https://wa.me/584129020243?text=quiero%20un%20servicio%20tecnico%20me%20podrias%20brindar%20mas%20informacion" class="float-wa" target="_blank">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+
+    <footer>
+        <div class="social-icons">
+            <a href="https://www.tiktok.com/@soportecrj" target="_blank" class="social-btn tiktok"><i class="fab fa-tiktok"></i> TikTok</a>
+            <a href="https://www.instagram.com/soportecrj/" target="_blank" class="social-btn instagram"><i class="fab fa-instagram"></i> Instagram</a>
+            <a href="https://www.facebook.com/ventascrj" target="_blank" class="social-btn facebook"><i class="fab fa-facebook"></i> Facebook</a>
+            <a href="https://www.youtube.com/@soportecrj" target="_blank" class="social-btn youtube"><i class="fab fa-youtube"></i> YouTube</a>
+        </div>
+        <div class="copyright-text">&copy; 2025 SOPORTE CRJ, C.A. J407133640 - Todos los derechos reservados.</div>
+        <a href="tecnico.html" class="tech-link" title="Acceso Técnicos"><i class="fas fa-lock"></i></a>
+    </footer>
+
+    <div id="printable-receipt">
+        <div class="receipt-header">
+            <div class="receipt-title">SOPORTE CRJ, C.A.</div>
+            <div>J-407133640</div>
+            <div>ORDEN DE SERVICIO</div>
+        </div>
+
+        <div class="receipt-row">
+            <strong>N° Orden:</strong> <span id="prOrden"></span>
+        </div>
+        <div class="receipt-row">
+            <strong>Fecha:</strong> <span id="prFecha"></span>
+        </div>
+        <div class="receipt-row">
+            <strong>Cliente:</strong> <span id="prCliente"></span>
+        </div>
+        <div class="receipt-row">
+            <strong>Teléfono:</strong> <span id="prTelefono"></span>
+        </div>
+
+        <br>
+        <div style="border-bottom: 1px solid #000; font-weight:bold; margin-bottom:5px;">DETALLES DEL EQUIPO</div>
+        
+        <div class="receipt-row">
+            <strong>Equipo:</strong> <span id="prModelo"></span>
+        </div>
+        <div class="receipt-row">
+            <strong>Serial:</strong> <span id="prSerial"></span>
+        </div>
+        <div class="receipt-row">
+            <strong>Falla:</strong> <span id="prFalla"></span>
+        </div>
+        <div class="receipt-row" style="display:block;">
+            <strong>Accesorios:</strong><br>
+            <span id="prAccesorios"></span>
+        </div>
+
+        <div class="receipt-sign">
+            <div class="sign-box">Firma Cliente</div>
+            <div class="sign-box">Firma Recibido</div>
+        </div>
+
+        <div class="receipt-footer">
+            <p>Gracias por su preferencia.</p>
+            <p>Consulte su estatus en: r0g3rca.github.io/rma_firstsystem/consulta.html</p>
+        </div>
+    </div>
+    <script>
+        // TU URL DEFINITIVA
+        const URL_SCRIPT = "https://script.google.com/macros/s/AKfycbzG1kaskmDCtw8L6UuynXetDwPNn0JDWkyR6ejQ667JQG7kS23lBPiQDSmqFzvmL3PrOQ/exec";
+
+        // Poner fecha de hoy
+        const hoy = new Date().toLocaleDateString();
+        document.getElementById('inpFecha').value = hoy;
+
+        // --- LÓGICA CHECKBOX "SOLO EQUIPO" ---
+        const checkSolo = document.querySelector('.special-check');
+        const checkNormales = document.querySelectorAll('.normal-check');
+        const inputOtros = document.getElementById('accOtros');
+
+        checkSolo.addEventListener('change', function() {
+            if(this.checked) {
+                checkNormales.forEach(c => c.checked = false);
+                inputOtros.value = "";
+                inputOtros.disabled = true;
+            } else {
+                inputOtros.disabled = false;
+            }
+        });
+
+        checkNormales.forEach(c => {
+            c.addEventListener('change', function() {
+                if(this.checked) {
+                    checkSolo.checked = false;
+                    inputOtros.disabled = false;
+                }
+            });
+        });
+
+        // Función Costo
+        function verificarCosto() {
+            const select = document.getElementById('selProcedencia');
+            const aviso = document.getElementById('avisoCosto');
+            aviso.style.display = (select.value === "Servicio técnico") ? 'block' : 'none';
+        }
+
+        // --- FUNCIÓN IMPRIMIR RECIBO ---
+        function imprimirRecibo() {
+            const orden = document.getElementById('inpOrden').value;
+            const cliente = document.getElementById('inpCliente').value;
+            const modelo = document.getElementById('inpModelo').value;
+            const serial = document.getElementById('inpSerial').value;
+            const falla = document.getElementById('inpFalla').value;
+            const telefono = document.getElementById('inpTelefono').value;
+
+            // Recopilar accesorios
+            let accTexto = "";
+            const marcados = document.querySelectorAll('.acc-check:checked');
+            let listaAcc = [];
+            marcados.forEach(c => listaAcc.push(c.value));
+            const otros = document.getElementById('accOtros').value.trim();
+            if(otros) listaAcc.push(otros);
+            accTexto = listaAcc.join(", ");
+
+            if(!orden || !cliente) {
+                alert("Por favor llene al menos el N° de orden y Nombre del cliente para imprimir.");
+                return;
+            }
+
+            document.getElementById('prOrden').innerText = orden;
+            document.getElementById('prFecha').innerText = document.getElementById('inpFecha').value;
+            document.getElementById('prCliente').innerText = cliente;
+            document.getElementById('prTelefono').innerText = telefono;
+            document.getElementById('prModelo').innerText = modelo;
+            document.getElementById('prSerial').innerText = serial;
+            document.getElementById('prFalla').innerText = falla;
+            document.getElementById('prAccesorios').innerText = accTexto || "Ninguno";
+
+            window.print();
+        }
+
+        // --- ENVIAR FORMULARIO ---
+        const form = document.getElementById('formRMA');
+        form.addEventListener('submit', e => {
+            e.preventDefault();
+            const btn = document.getElementById('btnGuardar');
+            const msg = document.getElementById('mensajeRegistro');
+            
+            if (form.vendedor.value === "") { alert("Seleccione un vendedor"); return; }
+            if (form.procedencia.value === "") { alert("Seleccione la procedencia"); return; }
+
+            const marcados = document.querySelectorAll('.acc-check:checked');
+            let listaAccesorios = [];
+            marcados.forEach(c => listaAccesorios.push(c.value));
+            const otros = document.getElementById('accOtros').value.trim();
+            if(otros) listaAccesorios.push(otros);
+            const textoFinalAccesorios = listaAccesorios.join(", ");
+
+            btn.disabled = true;
+            btn.innerText = "Guardando...";
+            msg.innerText = "";
+
+            const formData = new FormData(form);
+            formData.append('accesorios', textoFinalAccesorios);
+
+            fetch(URL_SCRIPT, { method: 'POST', body: formData })
+            .then(r => r.text())
+            .then(data => {
+                msg.innerText = "¡Guardado con éxito!";
+                msg.style.color = "green";
+                
+                if(confirm("Orden guardada. ¿Desea imprimir el recibo ahora?")) {
+                    imprimirRecibo();
+                }
+
+                form.reset();
+                form.vendedor.value = "";
+                form.procedencia.value = "";
+                verificarCosto(); 
+                document.querySelectorAll('.acc-check').forEach(c => c.checked = false);
+            })
+            .catch(e => { msg.innerText = "Error de conexión"; msg.style.color = "red"; })
+            .finally(() => { btn.disabled = false; btn.innerText = "Guardar orden"; });
+        });
+    </script>
+</body>
+</html>
