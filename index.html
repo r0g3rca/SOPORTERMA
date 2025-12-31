@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <style>
-        /* (ESTILOS IGUALES QUE ANTES) */
+        /* ESTILOS (IGUAL QUE ANTES) */
         body { font-family: 'Segoe UI', sans-serif; background-color: #f4f7f6; margin: 0; padding: 0; display: flex; flex-direction: column; min-height: 100vh; }
         .navbar { background: #2c3e50; padding: 10px 20px; text-align: right; }
         .navbar a { color: white; text-decoration: none; font-weight: bold; background: #34495e; padding: 8px 15px; border-radius: 4px; font-size: 0.9rem;}
@@ -41,7 +41,6 @@
         .social-btn:hover { opacity: 0.9; transform: translateY(-2px); }
         .copyright-text { font-size: 0.85rem; opacity: 0.8; margin-top: 5px; }
         .tech-link { color: #7f8c8d; text-decoration: none; font-size: 1.2rem; margin-top: 5px; transition: 0.3s; }
-        .tech-link:hover { color: #fff; }
         .float-wa { position: fixed; width: 60px; height: 60px; bottom: 25px; right: 25px; background-color: #25d366; color: #FFF; border-radius: 50px; text-align: center; font-size: 30px; box-shadow: 2px 2px 3px #999; z-index: 100; display: flex; align-items: center; justify-content: center; text-decoration: none; transition: 0.3s; }
         
         #printable-receipt { display: none; }
@@ -71,7 +70,9 @@
                 <form id="formRMA">
                     <div class="form-grid">
                         <div><label>N° de orden:</label><input type="number" id="inpOrden" name="orden" required placeholder="Ej: 1001" min="1"></div>
-                        <div><label>Fecha de recepción:</label><input type="text" id="inpFecha" value="" disabled style="background: #eee;"></div>
+                        
+                        <div><label>Fecha de recepción:</label><input type="text" id="inpFecha" value="" disabled style="background: #eee; color: #333; font-weight: bold;"></div>
+                        
                         <div>
                             <label>Vendedor/Receptor:</label>
                             <select name="vendedor" required>
@@ -89,7 +90,7 @@
                         
                         <div>
                             <label>Código de artículo:</label>
-                            <input type="text" id="inpCodigo" name="codigo" onblur="buscarProducto()" placeholder="Escriba código y tabula...">
+                            <input type="text" id="inpCodigo" name="codigo" onblur="buscarProducto()" placeholder="Escriba código y salga...">
                             <span id="loadingCode" style="font-size: 0.8rem; color: #3498db; display:none;">🔍 Buscando...</span>
                         </div>
 
@@ -109,10 +110,12 @@
                             </select>
                             <div id="avisoCosto"><i class="fas fa-exclamation-circle"></i> <strong>Nota:</strong> Este servicio tiene un costo asociado.</div>
                         </div>
+                        
                         <div class="full-width">
                             <label>Accesorios recibidos:</label>
                             <div class="checkbox-container">
-                                <label class="checkbox-item" style="color:#d35400; font-weight:bold;"><input type="checkbox" class="acc-check special-check" value="Solo Equipo"> Sin accesorios solo equipo</label>
+                                <label class="checkbox-item" style="color:#d35400; font-weight:bold;"><input type="checkbox" class="acc-check special-check-solo" value="Solo Equipo"> Sin accesorios solo equipo</label>
+                                <label class="checkbox-item" style="color:#2980b9; font-weight:bold;"><input type="checkbox" class="acc-check special-check-todos" value="Todos"> Todos sus accesorios</label>
                                 <label class="checkbox-item"><input type="checkbox" class="acc-check normal-check" value="Cargador"> Cargador</label>
                                 <label class="checkbox-item"><input type="checkbox" class="acc-check normal-check" value="Caja"> Caja</label>
                                 <label class="checkbox-item"><input type="checkbox" class="acc-check normal-check" value="Animes"> Animes</label>
@@ -121,6 +124,7 @@
                             </div>
                             <input type="text" id="accOtros" placeholder="Otros accesorios (Especifique aquí)..." style="margin-top: 10px;">
                         </div>
+
                         <div class="full-width"><label>Falla reportada:</label><textarea name="falla" id="inpFalla" rows="3" required placeholder="Describa el problema..."></textarea></div>
                         <div class="full-width" style="border-top: 1px solid #eee; margin-top: 10px; padding-top: 10px;"><strong style="color:#2c3e50;">Datos del cliente</strong></div>
                         <div><label>Nombre del cliente:</label><input type="text" id="inpCliente" name="recepcion" required></div>
@@ -147,7 +151,7 @@
             <a href="https://www.facebook.com/ventascrj" target="_blank" class="social-btn facebook"><i class="fab fa-facebook"></i> Facebook</a>
             <a href="https://www.youtube.com/@soportecrj" target="_blank" class="social-btn youtube"><i class="fab fa-youtube"></i> YouTube</a>
         </div>
-        <div class="copyright-text">&copy; 2025 SOPORTE CRJ, C.A. J-407133640 - Todos los derechos reservados.</div>
+        <div class="copyright-text">&copy; 2025 SOPORTE CRJ, C.A. J407133640 - Todos los derechos reservados.</div>
         <a href="tecnico.html" class="tech-link" title="Acceso Técnicos"><i class="fas fa-lock"></i></a>
     </footer>
 
@@ -169,42 +173,74 @@
     </div>
 
     <script>
-        // PEGA AQUÍ TU URL NUEVA
+        // PEGA AQUÍ TU URL NUEVA (LA QUE OBTUVISTE AL HACER "NUEVA VERSIÓN")
         const URL_SCRIPT = "https://script.google.com/macros/s/AKfycbzG1kaskmDCtw8L6UuynXetDwPNn0JDWkyR6ejQ667JQG7kS23lBPiQDSmqFzvmL3PrOQ/exec";
 
-        const hoy = new Date().toLocaleDateString();
-        document.getElementById('inpFecha').value = hoy;
+        // 1. FECHA AUTOMÁTICA
+        window.onload = function() {
+            const hoy = new Date();
+            const dia = String(hoy.getDate()).padStart(2, '0');
+            const mes = String(hoy.getMonth() + 1).padStart(2, '0'); 
+            const anio = hoy.getFullYear();
+            const fechaFormateada = `${dia}/${mes}/${anio}`;
+            document.getElementById('inpFecha').value = fechaFormateada;
+        };
 
-        // --- BÚSQUEDA DE PRODUCTO ---
+        // 2. BUSCAR PRODUCTO
         function buscarProducto() {
             const codigo = document.getElementById('inpCodigo').value;
             if(!codigo) return;
             
             document.getElementById('loadingCode').style.display = 'inline';
             
+            // Llamada al script para buscar
             fetch(URL_SCRIPT + "?accion=buscar_producto&codigo=" + encodeURIComponent(codigo))
             .then(r => r.json())
             .then(data => {
                 document.getElementById('loadingCode').style.display = 'none';
                 if(data.estado === "ok") {
+                    // Si lo encuentra, llena el campo
                     document.getElementById('inpModelo').value = data.descripcion;
+                    console.log("Producto encontrado:", data.descripcion);
+                } else {
+                    console.log("Producto no encontrado, se creará al guardar.");
                 }
             })
-            .catch(e => document.getElementById('loadingCode').style.display = 'none');
+            .catch(e => {
+                document.getElementById('loadingCode').style.display = 'none';
+                console.error("Error buscando:", e);
+            });
         }
 
-        const checkSolo = document.querySelector('.special-check');
+        // 3. CHECKBOXES
+        const checkSolo = document.querySelector('.special-check-solo');
+        const checkTodos = document.querySelector('.special-check-todos');
         const checkNormales = document.querySelectorAll('.normal-check');
         const inputOtros = document.getElementById('accOtros');
 
         checkSolo.addEventListener('change', function() {
             if(this.checked) {
+                checkTodos.checked = false;
                 checkNormales.forEach(c => c.checked = false);
                 inputOtros.value = ""; inputOtros.disabled = true;
             } else { inputOtros.disabled = false; }
         });
+
+        checkTodos.addEventListener('change', function() {
+            if(this.checked) {
+                checkSolo.checked = false;
+                checkNormales.forEach(c => c.checked = true);
+                inputOtros.disabled = false;
+            } else {
+                checkNormales.forEach(c => c.checked = false);
+            }
+        });
+
         checkNormales.forEach(c => {
-            c.addEventListener('change', function() { if(this.checked) { checkSolo.checked = false; inputOtros.disabled = false; } });
+            c.addEventListener('change', function() {
+                if(this.checked) { checkSolo.checked = false; }
+                else { checkTodos.checked = false; }
+            });
         });
 
         function verificarCosto() {
@@ -221,9 +257,15 @@
             const falla = document.getElementById('inpFalla').value;
             const telefono = document.getElementById('inpTelefono').value;
             let accTexto = "";
-            const marcados = document.querySelectorAll('.acc-check:checked');
+            const marcados = document.querySelectorAll('.normal-check:checked'); 
             let listaAcc = [];
-            marcados.forEach(c => listaAcc.push(c.value));
+            
+            if(checkSolo.checked) {
+                listaAcc.push("SOLO EQUIPO (SIN ACCESORIOS)");
+            } else {
+                marcados.forEach(c => listaAcc.push(c.value));
+            }
+
             const otros = document.getElementById('accOtros').value.trim();
             if(otros) listaAcc.push(otros);
             accTexto = listaAcc.join(", ");
@@ -250,9 +292,13 @@
             if (form.vendedor.value === "") { alert("Seleccione un vendedor"); return; }
             if (form.procedencia.value === "") { alert("Seleccione la procedencia"); return; }
 
-            const marcados = document.querySelectorAll('.acc-check:checked');
             let listaAccesorios = [];
-            marcados.forEach(c => listaAccesorios.push(c.value));
+            if(checkSolo.checked) {
+                listaAccesorios.push("SOLO EQUIPO");
+            } else {
+                const marcados = document.querySelectorAll('.normal-check:checked');
+                marcados.forEach(c => listaAccesorios.push(c.value));
+            }
             const otros = document.getElementById('accOtros').value.trim();
             if(otros) listaAccesorios.push(otros);
             const textoFinalAccesorios = listaAccesorios.join(", ");
@@ -277,6 +323,7 @@
                     form.vendedor.value = ""; form.procedencia.value = "";
                     verificarCosto(); 
                     document.querySelectorAll('.acc-check').forEach(c => c.checked = false);
+                    window.onload(); // Restaurar fecha
                 }
             })
             .catch(e => { msg.innerText = "Error de conexión"; msg.style.color = "red"; })
