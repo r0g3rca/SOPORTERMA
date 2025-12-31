@@ -30,7 +30,7 @@
         
         /* ESTILO GRUPO TELEFONO */
         .phone-group { display: flex; gap: 5px; }
-        .phone-prefix { width: 110px !important; background: #f8f9fa; }
+        .phone-prefix { width: 140px !important; background: #f8f9fa; } /* Un poco más ancho para los nombres */
         .phone-number { flex: 1; }
 
         /* CHECKBOXES */
@@ -160,16 +160,34 @@
                             <label>Teléfono (WhatsApp):</label>
                             <div class="phone-group">
                                 <select id="selPais" class="phone-prefix">
-                                    <option value="58" selected>🇻🇪 +58</option>
-                                    <option value="1">🇺🇸 +1</option>
-                                    <option value="34">🇪🇸 +34</option>
-                                    <option value="57">🇨🇴 +57</option>
-                                    <option value="56">🇨🇱 +56</option>
-                                    <option value="54">🇦🇷 +54</option>
-                                    <option value="55">🇧🇷 +55</option>
-                                    <option value="51">🇵🇪 +51</option>
-                                    <option value="52">🇲🇽 +52</option>
-                                    <option value="507">🇵🇦 +507</option>
+                                    <option value="58" selected>🇻🇪 +58 (Ven)</option>
+                                    <option value="54">🇦🇷 +54 (Arg)</option>
+                                    <option value="297">🇦🇼 +297 (Aru)</option>
+                                    <option value="591">🇧🇴 +591 (Bol)</option>
+                                    <option value="55">🇧🇷 +55 (Bra)</option>
+                                    <option value="1">🇨🇦 +1 (Can)</option>
+                                    <option value="56">🇨🇱 +56 (Chi)</option>
+                                    <option value="57">🇨🇴 +57 (Col)</option>
+                                    <option value="506">🇨🇷 +506 (Cos)</option>
+                                    <option value="53">🇨🇺 +53 (Cub)</option>
+                                    <option value="593">🇪🇨 +593 (Ecu)</option>
+                                    <option value="503">🇸🇻 +503 (Sal)</option>
+                                    <option value="34">🇪🇸 +34 (Esp)</option>
+                                    <option value="1">🇺🇸 +1 (USA)</option>
+                                    <option value="502">🇬🇹 +502 (Gua)</option>
+                                    <option value="504">🇭🇳 +504 (Hon)</option>
+                                    <option value="52">🇲🇽 +52 (Mex)</option>
+                                    <option value="505">🇳🇮 +505 (Nic)</option>
+                                    <option value="507">🇵🇦 +507 (Pan)</option>
+                                    <option value="595">🇵🇾 +595 (Par)</option>
+                                    <option value="51">🇵🇪 +51 (Per)</option>
+                                    <option value="351">🇵🇹 +351 (Por)</option>
+                                    <option value="1">🇩🇴 +1 (Dom)</option>
+                                    <option value="598">🇺🇾 +598 (Uru)</option>
+                                    <option value="86">🇨🇳 +86 (Chi)</option>
+                                    <option value="33">🇫🇷 +33 (Fra)</option>
+                                    <option value="49">🇩🇪 +49 (Ale)</option>
+                                    <option value="39">🇮🇹 +39 (Ita)</option>
                                 </select>
                                 <input type="tel" id="inpTelefono" class="phone-number" required placeholder="Ej: 4121234567">
                             </div>
@@ -225,7 +243,6 @@
 
         // 1. FECHA AUTOMÁTICA (Calendario)
         window.onload = function() {
-            // Obtener fecha de hoy en formato YYYY-MM-DD para el input type="date"
             const hoy = new Date();
             const year = hoy.getFullYear();
             const month = String(hoy.getMonth() + 1).padStart(2, '0');
@@ -264,9 +281,7 @@
                 return;
             }
 
-            // Construimos el número completo
             const telefonoFull = prefijo + numero;
-
             const linkConsulta = "https://r0g3rca.github.io/rma_firstsystem/consulta.html";
             const mensaje = `Hola *${cliente}*, recibimos su equipo en *Soporte CRJ*.%0A%0A` +
                             `📄 *Orden:* ${orden}%0A` +
@@ -320,8 +335,7 @@
             const serial = document.getElementById('inpSerial').value;
             const falla = document.getElementById('inpFalla').value;
             
-            // Unir prefijo y teléfono para el recibo
-            const prefijo = document.getElementById('selPais').options[document.getElementById('selPais').selectedIndex].text.split(' ')[1]; // Obtiene "+58"
+            const prefijo = document.getElementById('selPais').options[document.getElementById('selPais').selectedIndex].text.split(' ')[1]; 
             const num = document.getElementById('inpTelefono').value;
             const telefono = prefijo + " " + num;
 
@@ -342,7 +356,7 @@
             if(!orden || !cliente) { alert("Por favor llene al menos el N° de orden y Nombre del cliente."); return; }
 
             document.getElementById('prOrden').innerText = orden;
-            document.getElementById('prFecha').innerText = document.getElementById('inpFecha').value; // Muestra formato YYYY-MM-DD o el local al imprimir
+            document.getElementById('prFecha').innerText = document.getElementById('inpFecha').value; 
             document.getElementById('prCliente').innerText = cliente;
             document.getElementById('prTelefono').innerText = telefono;
             document.getElementById('prModelo').innerText = modelo;
@@ -372,8 +386,7 @@
             if(otros) listaAccesorios.push(otros);
             const textoFinalAccesorios = listaAccesorios.join(", ");
 
-            // UNIR TELÉFONO ANTES DE ENVIAR
-            const prefijo = document.getElementById('selPais').value; // 58
+            const prefijo = document.getElementById('selPais').value; 
             const num = document.getElementById('inpTelefono').value;
             const telefonoCompleto = "+" + prefijo + " " + num;
 
@@ -381,7 +394,7 @@
 
             const formData = new FormData(form);
             formData.append('accesorios', textoFinalAccesorios);
-            formData.append('telefono', telefonoCompleto); // Sobrescribe el campo para enviar el completo
+            formData.append('telefono', telefonoCompleto);
 
             fetch(URL_SCRIPT, { method: 'POST', body: formData })
             .then(r => r.text())
@@ -404,8 +417,8 @@
                     form.vendedor.value = ""; form.procedencia.value = "";
                     verificarCosto(); 
                     document.querySelectorAll('.acc-check').forEach(c => c.checked = false);
-                    window.onload(); // Restaurar fecha hoy
-                    document.getElementById('selPais').value = "58"; // Resetear país a Vzla
+                    window.onload(); 
+                    document.getElementById('selPais').value = "58"; 
                 }
             })
             .catch(e => { msg.innerText = "Error de conexión"; msg.style.color = "red"; })
