@@ -15,12 +15,11 @@
         
         .main-wrapper { display: flex; justify-content: center; align-items: flex-start; gap: 20px; padding: 20px; flex: 1; }
         
-        /* BANNER IZQUIERDO (IMAGEN) */
-        .side-banner { width: 300px; height: auto; max-height: 600px; object-fit: cover; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        /* BANNER IZQUIERDO Y DERECHO (INSTAGRAM) */
+        .side-banner, .instagram-wrapper { width: 300px; }
         
-        /* BANNER DERECHO (INSTAGRAM) */
+        /* ESTILOS CAJA INSTAGRAM */
         .instagram-wrapper {
-            width: 300px;
             background: white;
             border-radius: 8px;
             box-shadow: 0 4px 10px rgba(0,0,0,0.1);
@@ -39,9 +38,12 @@
             margin: 0 auto !important;
         }
         .insta-title { text-align:center; color:#2c3e50; font-size:1.1rem; margin:0 0 15px 0; font-weight: bold; }
+        
+        /* BOTÓN INSTAGRAM "SÍGUENOS" */
         .insta-btn {
             background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
             color: white; text-decoration: none; padding: 10px 20px; border-radius: 5px; font-weight: bold; margin-bottom: 15px; width: 100%; text-align: center; display: block; box-sizing: border-box;
+            text-transform: uppercase; /* Asegura mayúsculas */
         }
         .insta-btn:hover { opacity: 0.9; }
 
@@ -236,8 +238,9 @@
         
         <div class="instagram-wrapper">
             <h3 class="insta-title"><i class="fab fa-instagram"></i> Novedades</h3>
+            
             <a href="https://www.instagram.com/soportecrj/" target="_blank" class="insta-btn">
-                Síguenos @soportecrj
+                <i class="fab fa-instagram"></i> SÍGUENOS
             </a>
             
             <div style="background:#eee; padding:30px 10px; text-align:center; border-radius:5px; color:#777; width:100%;">
@@ -280,7 +283,7 @@
     <script async src="//www.instagram.com/embed.js"></script>
 
     <script>
-        // PEGA AQUÍ TU URL (SI CAMBIÓ AL IMPLEMENTAR EL ARREGLO)
+        // URL PROPORCIONADA POR EL USUARIO (Verificar que sea la Web App /exec)
         const URL_SCRIPT = "https://script.google.com/macros/library/d/1hzF5SyupNzmlQTvf4BNeE6cU6hkB0BUW1WtK4IwMMP4j5ipA2box3jXD/7";
 
         // 1. FECHA AUTOMÁTICA
@@ -442,7 +445,7 @@
                     document.getElementById('selPais').value = "58"; 
                 }
             })
-            .catch(e => { msg.innerText = "Error de conexión"; msg.style.color = "red"; })
+            .catch(e => { msg.innerText = "Error de conexión. Verifica la URL del Script."; msg.style.color = "red"; })
             .finally(() => { btn.disabled = false; btn.innerText = "Guardar orden"; });
         });
     </script>
