@@ -272,7 +272,8 @@
         <div class="receipt-row"><strong>Equipo:</strong> <span id="prModelo"></span></div>
         <div class="receipt-row"><strong>Serial:</strong> <span id="prSerial"></span></div>
         <div class="receipt-row"><strong>Falla:</strong> <span id="prFalla"></span></div>
-        <div class="receipt-row"><strong>Prioridad:</strong> <span id="prPrioridad"></span></div> <div class="receipt-row" style="display:block;"><strong>Accesorios:</strong><br><span id="prAccesorios"></span></div>
+        <div class="receipt-row"><strong>Prioridad:</strong> <span id="prPrioridad"></span></div>
+        <div class="receipt-row" style="display:block;"><strong>Accesorios:</strong><br><span id="prAccesorios"></span></div>
         <div class="receipt-sign"><div class="sign-box">Firma Cliente</div><div class="sign-box">Firma Recibido</div></div>
         <div class="receipt-footer"><p>Gracias por su preferencia.</p><p>Consulte su estatus en: r0g3rca.github.io/rma_firstsystem/consulta.html</p></div>
     </div>
@@ -280,10 +281,9 @@
     <script async src="//www.instagram.com/embed.js"></script>
 
     <script>
-        // ¡¡PEGA AQUÍ TU URL NUEVA!!
+        // PEGA AQUÍ TU URL CORRECTA (LA QUE TERMINA EN /exec)
         const URL_SCRIPT = "https://script.google.com/macros/s/AKfycbzG1kaskmDCtw8L6UuynXetDwPNn0JDWkyR6ejQ667JQG7kS23lBPiQDSmqFzvmL3PrOQ/exec";
 
-        // 1. FECHA AUTOMÁTICA
         window.onload = function() {
             const hoy = new Date();
             const year = hoy.getFullYear();
@@ -293,7 +293,6 @@
             document.getElementById('inpFecha').value = fechaInput;
         };
 
-        // 2. BUSCAR PRODUCTO
         function buscarProducto() {
             const codigo = document.getElementById('inpCodigo').value;
             if(!codigo) return;
@@ -309,7 +308,6 @@
             .catch(e => document.getElementById('loadingCode').style.display = 'none');
         }
 
-        // 3. ENVIAR WHATSAPP
         function enviarWhatsApp() {
             const prefijo = document.getElementById('selPais').value;
             const numero = document.getElementById('inpTelefono').value.replace(/\D/g, ''); 
@@ -329,7 +327,7 @@
             window.open(`https://wa.me/${telefonoFull}?text=${mensaje}`, '_blank');
         }
 
-        // 4. CHECKBOXES
+        // CONTROL DE CHECKBOXES
         const checkSolo = document.querySelector('.special-check-solo');
         const checkTodos = document.querySelector('.special-check-todos');
         const checkNormales = document.querySelectorAll('.normal-check');
@@ -370,7 +368,7 @@
             const modelo = document.getElementById('inpModelo').value;
             const serial = document.getElementById('inpSerial').value;
             const falla = document.getElementById('inpFalla').value;
-            const prioridad = document.getElementsByName('prioridad')[0].value; // NUEVO
+            const prioridad = document.getElementsByName('prioridad')[0].value; 
             const prefijo = document.getElementById('selPais').options[document.getElementById('selPais').selectedIndex].text.split(' ')[1]; 
             const num = document.getElementById('inpTelefono').value;
             const telefono = prefijo + " " + num;
@@ -393,7 +391,7 @@
             document.getElementById('prModelo').innerText = modelo;
             document.getElementById('prSerial').innerText = serial;
             document.getElementById('prFalla').innerText = falla;
-            document.getElementById('prPrioridad').innerText = prioridad; // NUEVO
+            document.getElementById('prPrioridad').innerText = prioridad; 
             document.getElementById('prAccesorios').innerText = accTexto || "Ninguno";
             window.print();
         }
