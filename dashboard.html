@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Gerencial - Soporte CRJ</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background-color: #f4f7f6; margin: 0; padding: 0; display: flex; flex-direction: column; min-height: 100vh; }
+        
+        /* NAVBAR */
+        .navbar { background: #2c3e50; padding: 15px 30px; color: white; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .navbar-brand { font-size: 1.2rem; font-weight: bold; display: flex; align-items: center; gap: 10px; }
+        .navbar-links a { color: white; text-decoration: none; font-weight: bold; background: #34495e; padding: 8px 15px; border-radius: 4px; font-size: 0.9rem; margin-left: 10px; transition: 0.3s; }
+        .navbar-links a:hover { background: #1abc9c; }
+
+        .main-container { padding: 30px; max-width: 1200px; margin: 0 auto; width: 100%; box-sizing: border-box; flex: 1; }
+        
+        /* TARJETAS SUPERIORES (KPIs) */
+        .cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; margin-bottom: 30px; }
+        .card { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); text-align: center; transition: transform 0.3s; }
+        .card:hover { transform: translateY(-5px); }
+        .card h3 { margin: 0; color: #7f8c8d; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; }
+        .card .number { font-size: 3rem; font-weight: bold; margin: 15px 0; color: #2c3e50; }
+        .card i { font-size: 2.5rem; margin-bottom: 10px; opacity: 0.8; }
+        
+        /* Colores de las tarjetas */
+        .c-total { border-top: 5px solid #3498db; } .c-total i { color: #3498db; }
+        .c-pend { border-top: 5px solid #f39c12; } .c-pend i { color: #f39c12; }
+        .c-ready { border-top: 5px solid #27ae60; } .c-ready i { color: #27ae60; }
+        .c-deliv { border-top: 5px solid #95a5a6; } .c-deliv i { color: #95a5a6; }
+
+        /* SECCIÓN INFERIOR (GRÁFICO Y OPINIONES) */
+        .content-grid { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 30px; }
+        .content-box { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        
+        h2 { color: #2c3e50; border-bottom: 2px solid #f4f7f6; padding-bottom: 15px; margin-top: 0; font-size: 1.3rem; display: flex; align-items: center; gap: 10px; }
+
+        /* LISTA DE COMENTARIOS */
+        .comment-item { background: #f8f9fa; border-radius: 8px; padding: 15px; margin-bottom: 15px; border-left: 4px solid #f1c40f; }
+        .c-header { display: flex; justify-content: space-between; margin-bottom: 5px; }
+        .c-user { font-weight: bold; color: #2c3e50; }
+        .stars { color: #f1c40f; letter-spacing: 2px; }
+        .c-msg { font-size: 0.95rem; color: #555; font-style: italic; line-height: 1.4; }
+
+        /* PANTALLA DE CARGA */
+        #loadingOverlay { position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(255,255,255,0.95); display:flex; justify-content:center; align-items:center; z-index:999; flex-direction: column; }
+        .loader-text { margin-top: 15px; color: #3498db; font-weight: bold; font-size: 1.2rem; }
+
+        footer { background-color: #2c3e50; color: white; text-align: center; padding: 20px; font-size: 0.85rem; margin-top: auto; }
+
+        @media (max-width: 900px) { .content-grid { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+
+    <div id="loadingOverlay">
+        <i class="fas fa-circle-notch fa-spin" style="font-size: 3rem; color: #3498db;"></i>
+        <div class="loader-text">Conectando con la base de datos...</div>
+    </div>
+
+    <div class="navbar">
+        <div class="navbar-brand"><i class="fas fa-chart-pie"></i> Dashboard RMA</div>
+        <div class="navbar-links">
+            <a href="tecnico.html"><i class="fas fa-tools"></i> Área Técnica</a>
+            <a href="index.html"><i class="fas fa-home"></i> Recepción</a>
+        </div>
+    </div>
+
+    <div class="main-container">
+        
+        <div class="cards-grid">
+            <div class="card c-total">
+                <i class="fas fa-clipboard-list"></i>
+                <h3>Total Recibidos</h3>
+                <div class="number" id="numTotal">-</div>
+            </div>
+            <div class="card c-pend">
+                <i class="fas fa-tools"></i>
+                <h3>En Taller</h3>
+                <div class="number" id="numPend">-</div>
+                <small style="color:#777;">(Pendientes + Revisión)</small>
+            </div>
+            <div class="card c-ready">
+                <i class="fas fa-check-circle"></i>
+                <h3>Listos</h3>
+                <div class="number" id="numReady">-</div>
+            </div>
+            <div class="card c-deliv">
+                <i class="fas fa-box-open"></i>
+                <h3>Entregados</h3>
+                <div class="number" id="numDeliv">-</div>
+            </div>
+        </div>
+
+        <div class="content-grid">
+            
+            <div class="content-box">
+                <h2><i class="fas fa-chart-doughnut"></i> Flujo de Reparaciones</h2>
+                <div style="position: relative; height: 300px;">
+                    <canvas id="rmaChart"></canvas>
+                </div>
+            </div>
+
+            <div class="content-box">
+                <h2><i class="fas fa-star" style="color:#f1c40f;"></i> Últimas Opiniones</h2>
+                <div id="listaComentarios">
+                    </div>
+            </div>
+        </div>
+
+    </div>
+
+    <footer>&copy; 2025 SOPORTE CRJ - Panel Administrativo</footer>
+
+    <script>
+        // ==========================================
+        // ⚠️ PEGA AQUÍ TU URL DEL SCRIPT DE GOOGLE
+        // ==========================================
+        const URL_SCRIPT = "https://script.google.com/macros/s/AKfycbzG1kaskmDCtw8L6UuynXetDwPNn0JDWkyR6ejQ667JQG7kS23lBPiQDSmqFzvmL3PrOQ/exec";
+
+        window.onload = cargarDatosDashboard;
+
+        function cargarDatosDashboard() {
+            fetch(URL_SCRIPT + "?accion=estadisticas")
+            .then(r => r.json())
+            .then(data => {
+                // 1. Llenar Tarjetas
+                animarNumero('numTotal', data.total);
+                
+                // En Taller sumamos Pendientes + En Revisión
+                const enTaller = data.pendientes + data.revision;
+                animarNumero('numPend', enTaller);
+                
+                animarNumero('numReady', data.reparados);
+                animarNumero('numDeliv', data.entregados);
+
+                // 2. Crear Gráfico
+                crearGrafico(data.pendientes, data.revision, data.reparados, data.entregados);
+
+                // 3. Llenar Opiniones
+                const lista = document.getElementById('listaComentarios');
+                lista.innerHTML = "";
+                
+                if (data.opiniones && data.opiniones.length > 0) {
+                    data.opiniones.forEach(op => {
+                        let estrellasHTML = "";
+                        for(let i=0; i<5; i++) {
+                            if(i < op.estrellas) estrellasHTML += '<i class="fas fa-star"></i>';
+                            else estrellasHTML += '<i class="far fa-star" style="opacity:0.3;"></i>';
+                        }
+
+                        let html = `
+                            <div class="comment-item">
+                                <div class="c-header">
+                                    <span class="c-user">${op.nombre}</span>
+                                    <span class="stars">${estrellasHTML}</span>
+                                </div>
+                                <div class="c-msg">"${op.mensaje}"</div>
+                            </div>
+                        `;
+                        lista.innerHTML += html;
+                    });
+                } else {
+                    lista.innerHTML = "<p style='text-align:center; color:#999; margin-top:50px;'>No hay opiniones registradas aún.</p>";
+                }
+
+                // Ocultar Loading
+                document.getElementById('loadingOverlay').style.display = 'none';
+            })
+            .catch(e => {
+                console.error(e);
+                alert("No se pudo conectar con el servidor de datos.");
+                document.getElementById('loadingOverlay').style.display = 'none';
+            });
+        }
+
+        // Función para crear el gráfico circular
+        function crearGrafico(pend, rev, listos, entregados) {
+            const ctx = document.getElementById('rmaChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Pendiente', 'En Revisión', 'Listo / Reparado', 'Entregado'],
+                    datasets: [{
+                        data: [pend, rev, listos, entregados],
+                        backgroundColor: [
+                            '#f39c12', // Naranja (Pendiente)
+                            '#8e44ad', // Morado (Revisión)
+                            '#27ae60', // Verde (Listo)
+                            '#95a5a6'  // Gris (Entregado)
+                        ],
+                        borderWidth: 2,
+                        borderColor: '#ffffff'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom', labels: { padding: 20, font: { size: 12 } } }
+                    },
+                    cutout: '65%' // Grosor del anillo
+                }
+            });
+        }
+
+        // Efecto visual de conteo
+        function animarNumero(id, valorFinal) {
+            const elemento = document.getElementById(id);
+            let actual = 0;
+            const incremento = Math.ceil(valorFinal / 20); // Velocidad
+            if(valorFinal === 0) { elemento.innerText = 0; return; }
+
+            const timer = setInterval(() => {
+                actual += incremento;
+                if (actual >= valorFinal) {
+                    actual = valorFinal;
+                    clearInterval(timer);
+                }
+                elemento.innerText = actual;
+            }, 30);
+        }
+
+        // --- PROTECCIÓN BÁSICA (NIVEL 3) ---
+        document.addEventListener('contextmenu', event => event.preventDefault());
+        document.onkeydown = function(e) {
+            if(event.keyCode == 123) { return false; }
+            if(e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0)) { return false; }
+            if(e.ctrlKey && e.shiftKey && e.keyCode == 'C'.charCodeAt(0)) { return false; }
+            if(e.ctrlKey && e.shiftKey && e.keyCode == 'J'.charCodeAt(0)) { return false; }
+            if(e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) { return false; }
+        }
+    </script>
+</body>
+</html>
