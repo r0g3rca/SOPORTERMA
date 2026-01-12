@@ -14,17 +14,18 @@
         .navbar a:hover { background: #1abc9c; }
         
         .main-wrapper { display: flex; justify-content: center; align-items: flex-start; gap: 20px; padding: 20px; flex: 1; }
-        
-        /* Ocultar sidebars en técnico para dar espacio */
         .instagram-wrapper { display: none; } 
 
         .form-container { flex: 1; max-width: 900px; background: white; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); overflow: hidden; }
+        
+        /* HEADER CORREGIDO */
         .form-header-img { width: 100%; height: auto; display: block; max-height: 200px; object-fit: cover; }
+        
         .form-content { padding: 30px; }
         h1 { text-align: center; color: #2c3e50; margin-top: 0; }
         
         /* LOGIN */
-        #loginArea { text-align: center; padding: 50px; }
+        #loginArea { text-align: center; padding: 50px; max-width: 400px; margin: 0 auto; }
         #appArea { display: none; }
 
         input, select, textarea { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px; margin-bottom: 10px; box-sizing: border-box; }
@@ -47,13 +48,23 @@
             
             <div class="form-content">
                 <div id="loginArea">
-                    <h2><i class="fas fa-lock"></i> Acceso Técnico</h2>
-                    <input type="password" id="passInput" placeholder="Contraseña de acceso">
-                    <button onclick="verificar()" class="btn-action">Entrar</button>
+                    <h2><i class="fas fa-user-cog"></i> Acceso Técnico</h2>
+                    
+                    <label style="text-align:left;">Seleccione Técnico:</label>
+                    <select id="selTecnicoLogin">
+                        <option value="GENERAL">SOPORTE GENERAL</option>
+                        <option value="EUDE">EUDE MORA</option>
+                    </select>
+
+                    <label style="text-align:left;">Contraseña:</label>
+                    <input type="password" id="passInput" placeholder="Ingrese su clave">
+                    
+                    <button onclick="verificar()" class="btn-action">Entrar al Sistema</button>
                 </div>
 
                 <div id="appArea">
-                    <h1>Gestión de Órdenes</h1>
+                    <h1>Gestión de Órdenes <small style="font-size:0.5em; color:#777;">(Logueado: <span id="nombreTecnico"></span>)</small></h1>
+                    
                     <div class="search-box">
                         <input type="number" id="inpBuscarOrden" placeholder="N° Orden...">
                         <button onclick="buscarParaEditar()" class="btn-search"><i class="fas fa-search"></i> Buscar</button>
@@ -65,3 +76,112 @@
                         
                         <label>Diagnóstico / Informe Técnico:</label>
                         <textarea id="txtDiagnostico" rows="5" placeholder="Escriba el informe técnico..."></textarea>
+                        
+                        <label>Nuevo Estatus:</label>
+                        <select id="selEstatus">
+                            <option value="PENDIENTE">PENDIENTE</option>
+                            <option value="EN REVISIÓN">EN REVISIÓN</option>
+                            <option value="ESPERANDO REPUESTO">ESPERANDO REPUESTO</option>
+                            <option value="LISTO / REPARADO">LISTO / REPARADO</option>
+                            <option value="LISTO / SIN SOLUCIÓN">LISTO / SIN SOLUCIÓN</option>
+                            <option value="ENTREGADO">ENTREGADO</option>
+                        </select>
+
+                        <button onclick="guardarCambios()" class="btn-action" style="margin-top:10px;">Guardar Cambios</button>
+                    </div>
+                    <p id="msgTecnico" style="text-align:center; font-weight:bold; margin-top:10px;"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        &copy; 2025 SOPORTE CRJ - Área Restringida
+    </footer>
+
+    <script>
+        // TU URL NUEVA
+        const URL_SCRIPT = "https://script.google.com/macros/s/AKfycbzG1kaskmDCtw8L6UuynXetDwPNn0JDWkyR6ejQ667JQG7kS23lBPiQDSmqFzvmL3PrOQ/exec";
+
+        function verificar() {
+            const tecnico = document.getElementById('selTecnicoLogin').value;
+            const pass = document.getElementById('passInput').value;
+            
+            let acceso = false;
+
+            // SISTEMA DE CLAVES
+            if (tecnico === "GENERAL" && pass === "13207") {
+                acceso = true;
+                document.getElementById('nombreTecnico').innerText = "Soporte General";
+            } 
+            else if (tecnico === "EUDE" && pass === "1310") {
+                acceso = true;
+                document.getElementById('nombreTecnico').innerText = "Eude Mora";
+            }
+
+            if (acceso) {
+                document.getElementById('loginArea').style.display = 'none';
+                document.getElementById('appArea').style.display = 'block';
+            } else {
+                alert("Contraseña incorrecta para el usuario seleccionado.");
+            }
+        }
+
+        function buscarParaEditar() {
+            const orden = document.getElementById('inpBuscarOrden').value;
+            if(!orden) return;
+            
+            document.getElementById('msgTecnico').innerText = "Buscando...";
+            
+            fetch(URL_SCRIPT + "?accion=consultar&dato=" + orden)
+            .then(r => r.json())
+            .then(data => {
+                document.getElementById('msgTecnico').innerText = "";
+                if(data.estado === "ok") {
+                    document.getElementById('editForm').style.display = 'block';
+                    document.getElementById('lblOrden').innerText = data.orden;
+                    document.getElementById('lblEquipo').innerText = data.descripcion;
+                    document.getElementById('lblFalla').innerText = data.falla_cliente;
+                    
+                    document.getElementById('txtDiagnostico').value = data.tecnico_reporte || "";
+                    document.getElementById('selEstatus').value = data.estatus || "PENDIENTE";
+                } else {
+                    alert("Orden no encontrada");
+                    document.getElementById('editForm').style.display = 'none';
+                }
+            });
+        }
+
+        function guardarCambios() {
+            const orden = document.getElementById('lblOrden').innerText;
+            const diag = document.getElementById('txtDiagnostico').value;
+            const est = document.getElementById('selEstatus').value;
+            const btn = document.querySelector('#editForm button');
+
+            // Firma automática en el diagnóstico según quién se logueó
+            const firma = " [" + document.getElementById('nombreTecnico').innerText + "]";
+            // Solo agregamos la firma si no está ya escrita
+            const diagnosticoFinal = diag.includes(firma) ? diag : diag + firma;
+
+            btn.disabled = true; btn.innerText = "Guardando...";
+
+            const formData = new FormData();
+            formData.append('accion', 'editar');
+            formData.append('orden', orden);
+            formData.append('diagnostico', diagnosticoFinal);
+            formData.append('estatus', est);
+
+            fetch(URL_SCRIPT, { method: 'POST', body: formData })
+            .then(r => r.text())
+            .then(data => {
+                alert("Guardado: " + data);
+                document.getElementById('editForm').style.display = 'none';
+                document.getElementById('inpBuscarOrden').value = "";
+                document.getElementById('msgTecnico').innerText = "Cambios guardados correctamente.";
+            })
+            .catch(e => alert("Error de conexión"))
+            .finally(() => { btn.disabled = false; btn.innerText = "Guardar Cambios"; });
+        }
+    </script>
+</body>
+</html>
