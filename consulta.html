@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <style>
-        /* ESTILOS IDÉNTICOS AL INDEX */
+        /* ESTILOS (Mismos de siempre) */
         body { font-family: 'Segoe UI', sans-serif; background-color: #f4f7f6; margin: 0; padding: 0; display: flex; flex-direction: column; min-height: 100vh; }
         .navbar { background: #2c3e50; padding: 10px 20px; text-align: left; }
         .navbar a { color: white; text-decoration: none; font-weight: bold; background: #34495e; padding: 8px 15px; border-radius: 4px; font-size: 0.9rem;}
@@ -48,6 +48,160 @@
         .form-content { padding: 30px; }
         h1 { text-align: center; color: #2c3e50; margin-top: 0; }
         
-        /* INPUTS */
+        /* INPUTS Y BOTONES */
         input[type="text"] { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; font-size: 1.1rem; text-align: center;}
-        input:focus { border-color: #
+        input:focus { border-color: #3498db; outline: none; }
+        
+        .btn-search { background-color: #3498db; color: white; width: 100%; padding: 15px; border: none; border-radius: 5px; font-size: 18px; font-weight: bold; cursor: pointer; margin-top: 15px; }
+        .btn-search:hover { background-color: #2980b9; }
+
+        /* BOTÓN OPINIÓN (NUEVO) */
+        .btn-opinion-link {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            background-color: #f39c12; /* Naranja */
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+        .btn-opinion-link:hover { background-color: #d35400; transform: translateY(-2px); }
+
+        /* RESULTADOS */
+        #resultado { margin-top: 20px; display: none; text-align: left; background: #f9f9f9; padding: 20px; border-radius: 5px; border: 1px solid #ddd; }
+        .res-row { margin-bottom: 10px; border-bottom: 1px dotted #ccc; padding-bottom: 5px; font-size: 1rem; }
+        .res-label { font-weight: bold; color: #2c3e50; }
+        .status-badge { padding: 5px 10px; border-radius: 15px; font-weight: bold; color: white; display: inline-block; }
+        .st-pendiente { background: #f39c12; }
+        .st-reparado { background: #27ae60; }
+        .st-entregado { background: #7f8c8d; }
+        .st-revision { background: #8e44ad; }
+
+        footer { background-color: #2c3e50; color: white; text-align: center; padding: 25px 20px; font-size: 0.9rem; margin-top: auto; display: flex; flex-direction: column; gap: 15px; }
+        .social-icons { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
+        .social-btn { display: flex; align-items: center; gap: 8px; padding: 8px 15px; border-radius: 20px; text-decoration: none; color: white; font-weight: bold; font-size: 0.9rem; transition: 0.3s; }
+        .tiktok { background-color: #000000; border: 1px solid #333; }
+        .instagram { background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); }
+        .facebook { background-color: #1877F2; }
+        .youtube { background-color: #FF0000; }
+        .social-btn:hover { opacity: 0.9; transform: translateY(-2px); }
+        .copyright-text { font-size: 0.85rem; opacity: 0.8; margin-top: 5px; }
+        
+        .float-wa { position: fixed; width: 60px; height: 60px; bottom: 25px; right: 25px; background-color: #25d366; color: #FFF; border-radius: 50px; text-align: center; font-size: 30px; box-shadow: 2px 2px 3px #999; z-index: 100; display: flex; align-items: center; justify-content: center; text-decoration: none; transition: 0.3s; }
+
+        @media (max-width: 1200px) { .instagram-wrapper { display: none; } .main-wrapper { padding: 10px; } }
+    </style>
+</head>
+<body>
+    <div class="navbar"><a href="index.html">&larr; Volver al Inicio</a></div>
+    <div class="main-wrapper">
+        
+        <div class="instagram-wrapper">
+            <h3 class="insta-title"><i class="fas fa-thumbtack"></i> Servicios</h3>
+            <a href="https://www.instagram.com/soportecrj/" target="_blank" class="insta-btn">SÍGUENOS</a>
+            <blockquote class="instagram-media" data-instgrm-captioned data-instgrm-permalink="https://www.instagram.com/p/DJMLY7YvScT/?utm_source=ig_embed&amp;utm_campaign=loading" data-instgrm-version="14" style=" background:#FFF; border:0; border-radius:3px; box-shadow:0 0 1px 0 rgba(0,0,0,0.5),0 1px 10px 0 rgba(0,0,0,0.15); margin: 1px; max-width:540px; min-width:326px; padding:0; width:99.375%; width:-webkit-calc(100% - 2px); width:calc(100% - 2px);"></blockquote>
+        </div>
+
+        <div class="form-container">
+            <img src="https://raw.githubusercontent.com/r0g3rca/rma_firstsystem/main/imagenes/header.png" alt="Encabezado" class="form-header-img">
+            <div class="form-content">
+                <h1><i class="fas fa-search"></i> Consultar Estatus</h1>
+                <p style="text-align:center; color:#666;">Ingrese su número de orden, número de control o serial del equipo.</p>
+                
+                <input type="text" id="inpBusqueda" placeholder="Ej: 1001 o Serial..." onkeypress="if(event.keyCode==13) consultarOrden()">
+                <button onclick="consultarOrden()" id="btnBuscar" class="btn-search">Buscar Orden</button>
+                
+                <a href="opinion.html" class="btn-opinion-link"><i class="fas fa-star"></i> Califique nuestro servicio</a>
+
+                <div id="resultado">
+                    <h3 style="text-align:center; color:#2c3e50; border-bottom:2px solid #ddd; padding-bottom:10px;">Detalles de la Orden</h3>
+                    <div class="res-row"><span class="res-label">Orden N°:</span> <span id="resOrden"></span></div>
+                    <div class="res-row"><span class="res-label">Fecha Recepción:</span> <span id="resFecha"></span></div>
+                    <div class="res-row"><span class="res-label">Equipo:</span> <span id="resEquipo"></span></div>
+                    <div class="res-row"><span class="res-label">Falla Cliente:</span> <span id="resFalla"></span></div>
+                    <div class="res-row"><span class="res-label">Diagnóstico Técnico:</span> <span id="resTecnico" style="color:#d35400;"></span></div>
+                    <div class="res-row" style="text-align:center; margin-top:20px;">
+                        <span id="resEstatus" class="status-badge"></span>
+                    </div>
+                </div>
+                <p id="mensajeError" style="text-align: center; color: red; font-weight: bold; margin-top:10px;"></p>
+            </div>
+        </div>
+        
+        <div class="instagram-wrapper">
+            <h3 class="insta-title"><i class="fab fa-instagram"></i> Novedades</h3>
+            <a href="https://www.instagram.com/soportecrj/" target="_blank" class="insta-btn">SÍGUENOS</a>
+            <blockquote class="instagram-media" data-instgrm-captioned data-instgrm-permalink="https://www.instagram.com/p/Cx5FFOwsqTR/?utm_source=ig_embed&amp;utm_campaign=loading" data-instgrm-version="14" style=" background:#FFF; border:0; border-radius:3px; box-shadow:0 0 1px 0 rgba(0,0,0,0.5),0 1px 10px 0 rgba(0,0,0,0.15); margin: 1px; max-width:540px; min-width:326px; padding:0; width:99.375%; width:-webkit-calc(100% - 2px); width:calc(100% - 2px);"></blockquote>
+        </div>
+    </div>
+
+    <a href="https://wa.me/584129020243" class="float-wa" target="_blank"><i class="fab fa-whatsapp"></i></a>
+
+    <footer>
+        <div class="social-icons">
+            <a href="https://www.tiktok.com/@soportecrj" target="_blank" class="social-btn tiktok"><i class="fab fa-tiktok"></i> TikTok</a>
+            <a href="https://www.instagram.com/soportecrj/" target="_blank" class="social-btn instagram"><i class="fab fa-instagram"></i> Instagram</a>
+            <a href="https://www.facebook.com/ventascrj" target="_blank" class="social-btn facebook"><i class="fab fa-facebook"></i> Facebook</a>
+            <a href="https://www.youtube.com/@soportecrj" target="_blank" class="social-btn youtube"><i class="fab fa-youtube"></i> YouTube</a>
+        </div>
+        <div class="copyright-text">&copy; 2025 SOPORTE CRJ, C.A. J407133640 - Todos los derechos reservados.</div>
+    </footer>
+
+    <script async src="//www.instagram.com/embed.js"></script>
+
+    <script>
+        // URL NUEVA
+        const URL_SCRIPT = "https://script.google.com/macros/s/AKfycbzG1kaskmDCtw8L6UuynXetDwPNn0JDWkyR6ejQ667JQG7kS23lBPiQDSmqFzvmL3PrOQ/exec";
+
+        function consultarOrden() {
+            const dato = document.getElementById('inpBusqueda').value.trim();
+            const btn = document.getElementById('btnBuscar');
+            const resDiv = document.getElementById('resultado');
+            const msg = document.getElementById('mensajeError');
+
+            if(!dato) { alert("Ingrese un dato para buscar"); return; }
+
+            btn.disabled = true; btn.innerText = "Buscando...";
+            resDiv.style.display = 'none';
+            msg.innerText = "";
+
+            fetch(URL_SCRIPT + "?accion=consultar&dato=" + encodeURIComponent(dato))
+            .then(r => r.json())
+            .then(data => {
+                if(data.estado === "ok") {
+                    document.getElementById('resOrden').innerText = data.orden;
+                    const fechaRaw = new Date(data.fecha_recepcion);
+                    document.getElementById('resFecha').innerText = fechaRaw.toLocaleDateString();
+                    document.getElementById('resEquipo').innerText = data.descripcion + " (" + data.serial + ")";
+                    document.getElementById('resFalla').innerText = data.falla_cliente;
+                    document.getElementById('resTecnico').innerText = data.tecnico_reporte || "En revisión...";
+                    
+                    const spanEst = document.getElementById('resEstatus');
+                    let est = data.estatus || "PENDIENTE";
+                    spanEst.innerText = est;
+                    spanEst.className = "status-badge";
+                    
+                    if(est.includes("LISTO") || est.includes("REPARADO")) spanEst.classList.add("st-reparado");
+                    else if(est.includes("ENTREGADO")) spanEst.classList.add("st-entregado");
+                    else if(est.includes("REVISIÓN")) spanEst.classList.add("st-revision");
+                    else spanEst.classList.add("st-pendiente");
+
+                    resDiv.style.display = 'block';
+                } else {
+                    msg.innerText = "No se encontró ninguna orden con ese dato.";
+                }
+            })
+            .catch(e => {
+                msg.innerText = "Error de conexión. Intente nuevamente.";
+                console.error(e);
+            })
+            .finally(() => {
+                btn.disabled = false; btn.innerText = "Buscar Orden";
+            });
+        }
+    </script>
+</body>
+</html>
